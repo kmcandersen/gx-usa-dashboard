@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 
-const Stats = () => {
-  return <div className='stats-wrapper'>STATS</div>;
+const Stats = ({ statsDimensions }) => {
+  useEffect(() => {
+    // console.log(statsDimensions);
+  }, [statsDimensions]);
+  return <div>STATS</div>;
 };
 
 export default Stats;

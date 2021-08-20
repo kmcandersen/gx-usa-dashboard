@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import logo from './gx-sign-blue.svg';
+import logo from './assets/gx-sign-blue.svg';
 
 const Header = () => {
   return (

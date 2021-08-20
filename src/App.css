@@ -1,3 +1,8 @@
+:root {
+  --primary-color: #005e95;
+  --background: #fff;
+}
+
 * {
   border: 1px solid red;
   box-sizing: border-box;
@@ -25,20 +30,11 @@ body {
   width: 40%;
 }
 
-.header-logo {
-  display: flex;
-}
-
-.header-name {
-  text-transform: uppercase;
-}
-
-.header-wrapper {
-  height: 160px;
-}
-
 .chart-wrapper {
-  height: calc(100% - 160px);
+  height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .map-wrapper {
@@ -47,6 +43,51 @@ body {
 
 .stats-wrapper {
   height: 40%;
+}
+
+/* HEADER */
+
+.header-wrapper {
+  height: 160px;
+}
+
+.header-logo {
+  display: flex;
+}
+
+.header-name {
+  text-transform: uppercase;
+}
+
+/* CHART */
+
+path.us-line {
+  fill: none;
+  stroke: var(--primary-color);
+  stroke-width: 4;
+}
+
+g.us-year circle {
+  fill: var(--primary-color);
+}
+
+g.us-year rect {
+  fill: var(--primary-color);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+g.us-year text {
+  text-anchor: middle;
+  fill: var(--background);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+g.us-year:hover rect,
+g.us-year:hover text {
+  opacity: 1;
 }
 
 @media only screen and (max-width: 600px) {
