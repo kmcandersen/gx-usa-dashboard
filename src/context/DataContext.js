@@ -3,7 +3,6 @@ import { csv } from 'd3';
 import usDataCsv from './../assets/inctotus_16_20.csv';
 import stDataCsv from './../assets/incbystate_16_20.csv';
 import stTotIncCsv from './../assets/inctotbystate_16_20.csv';
-//import usStateGeo from './../assets/gz_2010_us_040_00_20m.json';
 
 const DataContext = React.createContext();
 
@@ -11,11 +10,8 @@ export const DataProvider = ({ children }) => {
   const [usData, setUSData] = useState();
   const [stateYrData, setStateYrData] = useState();
   const [stateTotData, setStateTotData] = useState();
-  // const [stateGeo, setStateGeo] = useState();
+  const [selectedState, setSelectedState] = useState();
   const [error, setError] = useState(null);
-
-  // console.log('StateCsv', usDataCsv);
-  // console.log('usStateGeo', usStateGeo);
 
   const getUsData = async () => {
     try {
@@ -70,10 +66,6 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  // const getStateGeo = async () => {
-  //   setStateGeo(usStateGeo);
-  // };
-
   useEffect(() => {
     getUsData();
     getStateYrData();
@@ -86,7 +78,8 @@ export const DataProvider = ({ children }) => {
         usData,
         stateYrData,
         stateTotData,
-        // stateGeo,
+        selectedState,
+        setSelectedState,
         error,
       }}
     >

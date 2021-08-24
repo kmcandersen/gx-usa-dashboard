@@ -1,35 +1,42 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import {
-  extent,
-  format,
-  interpolateBlues,
-  max,
-  min,
-  scaleSequentialPow,
-  select,
-} from 'd3';
+import { max, scaleSequentialPow, select } from 'd3';
 import DataContext from './context/DataContext';
 import { ReactComponent as UsMap } from './assets/us_states_map.svg';
 import './App.css';
 
 const Map = ({ mapDimensions }) => {
   const { stateTotData } = useContext(DataContext);
-  //const [svgDimensions, setSvgDimensions] = useState();
+  const [stateTotRange, setStateTotRange] = useState();
+  const { selectedState, setSelectedState } = useContext(DataContext);
 
   const svgRef = useRef();
+
+  const findExtent = (arr, prop) => {
+    var lowest = 0;
+    var highest = 0;
+    var tmp;
+    arr.forEach((el) => {
+      tmp = el[prop];
+      if (tmp < lowest) lowest = tmp;
+      if (tmp > highest) highest = tmp;
+    });
+    return [lowest, highest];
+  };
+
+  useEffect(() => {
+    if (stateTotData) {
+      setStateTotRange(findExtent(stateTotData, 'TOTINC'));
+    }
+  }, [stateTotData]);
 
   useEffect(() => {
     if (stateTotData) {
       const metricAccessor = (d) => d.TOTINC;
 
-      const colorScale = scaleSequentialPow(interpolateBlues)
-        // low density = lighter
+      const colorScale = scaleSequentialPow()
         .domain([0, max(stateTotData, metricAccessor)])
-        // .domain(extent(stateTotData, metricAccessor))
         .range(['#00d4ff', '#090979'])
-        // > 1 = flatter/less variation; < 1 = more variation in colors
         .exponent(0.3);
-      // can also base color scale on min, max data values
 
       const svg = select(svgRef.current);
       svg
@@ -44,13 +51,48 @@ const Map = ({ mapDimensions }) => {
         .join('path.border')
         .attr('data-value', metricAccessor)
         .attr('fill', (d) => {
-          // if (d.TOTINC > 100) {
-          //   return 'blue';
-          // } else {
-          //   return 'green';
-          // }
           return colorScale(d.TOTINC);
         });
+
+      // ** SELECT state
+
+      svg.on('click', (e) => {
+        let selectedStateEl =
+          document.querySelector(`#${selectedState}`) || null;
+
+        //if empty area clicked
+        if (e.target.tagName === 'svg') {
+          selectedStateEl.classList.remove('selected-state');
+          setSelectedState(null);
+          // if map element clicked
+        } else {
+          let clickedStateName = '';
+
+          if (e.target.tagName === 'text' || e.target.tagName === 'rect') {
+            // access state name in the class name applied to tooltip rects & text els
+            clickedStateName = e.target.className.baseVal;
+          } else if (e.target.tagName === 'path') {
+            clickedStateName = e.target.id;
+          }
+
+          let clickedStateEl = document.querySelector(`#${clickedStateName}`);
+
+          if (selectedState) {
+            selectedStateEl.classList.remove('selected-state');
+            if (clickedStateName === selectedState) {
+              setSelectedState(null);
+            } else {
+              setSelectedState(clickedStateName);
+              clickedStateEl.classList.add('selected-state');
+            }
+          } else {
+            clickedStateEl.classList.add('selected-state');
+            setSelectedState(clickedStateName);
+          }
+        }
+      });
+
+      // ** HOVER on state
 
       function getBoundingBoxCenter(element) {
         var bbox = element.getBBox();
@@ -75,6 +117,7 @@ const Map = ({ mapDimensions }) => {
             .attr('y', bbCtr[1] - 12.5)
             .attr('height', 25)
             .attr('width', 70)
+            .attr('class', hoveredState.id)
             .style('opacity', 0)
             .transition()
             .duration(250)
@@ -83,6 +126,7 @@ const Map = ({ mapDimensions }) => {
             .append('text')
             .attr('x', bbCtr[0])
             .attr('y', bbCtr[1])
+            .attr('class', hoveredState.id)
             .text(
               `${hoveredState.id}: ${Number(
                 hoveredState.dataset.value
@@ -95,17 +139,29 @@ const Map = ({ mapDimensions }) => {
         }
       });
     }
-  }, [mapDimensions, stateTotData]);
+  }, [mapDimensions, stateTotData, selectedState]);
   if (mapDimensions && stateTotData) {
     return (
-      <div
-        style={{
-          width: mapDimensions.width * 0.9,
-          height: mapDimensions.width * 0.9 * 0.62,
-        }}
-      >
-        <UsMap ref={svgRef} />
-        <div id='legend'></div>
+      <div>
+        <h2>Total incidents by state</h2>
+        <p className='instructions'>
+          Hover on a state to view totals; click to show details
+        </p>
+        <div
+          style={{
+            width: mapDimensions.width * 0.9,
+            height: mapDimensions.width * 0.9 * 0.62,
+          }}
+        >
+          <UsMap ref={svgRef} />
+        </div>
+        {stateTotRange && (
+          <div className='legend'>
+            <p>{stateTotRange[0]}</p>
+            <div id='legend-bar'></div>
+            <p>{stateTotRange[1]}</p>
+          </div>
+        )}
       </div>
     );
   }

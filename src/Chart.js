@@ -14,6 +14,7 @@ import './App.css';
 
 const Chart = ({ chartDimensions }) => {
   const { usData } = useContext(DataContext);
+  const { selectedState } = useContext(DataContext);
   const [svgDimensions, setSvgDimensions] = useState();
 
   const svgRef = useRef();
@@ -153,13 +154,29 @@ const Chart = ({ chartDimensions }) => {
           `translate(${svgDimensions.margin.left}px, ${svgDimensions.margin.top}px`
         );
     }
-  }, [usData, chartDimensions]);
+  }, [usData, chartDimensions, selectedState]);
 
   return (
-    <svg ref={svgRef}>
-      <g className='x-axis' />
-      <g className='y-axis' />
-    </svg>
+    <div>
+      <h2>Incidents by year</h2>
+      <div className='legend legend-chart'>
+        <div className='legend-us'>
+          <p>United States</p>
+        </div>
+        <div className='legend-state'>
+          {selectedState ? (
+            <p className='chart-selected'>{selectedState}</p>
+          ) : (
+            <p className='instructions'>Select a state on map</p>
+          )}
+        </div>
+      </div>
+      <p className='instructions'>Hover on a point to view totals</p>
+      <svg ref={svgRef}>
+        <g className='x-axis' />
+        <g className='y-axis' />
+      </svg>
+    </div>
   );
 };
 

@@ -1,5 +1,8 @@
+@import url(//fonts.googleapis.com/css?family=Work+Sans:400,700);
+
 :root {
   --primary-color: #005e95;
+  --highlight-color: orange;
   --background: #fff;
   --gray: #808080;
   --dark-color: #000;
@@ -13,6 +16,14 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  font-family: Work Sans;
+  color: var(--primary-color);
+}
+
+.instructions {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gray);
 }
 
 .app-wrapper {
@@ -67,9 +78,15 @@ body {
 
 /* MAP */
 
-#us-map path {
+path.border {
   stroke: var(--background);
   stroke-width: 1px;
+}
+
+path.selected-state {
+  /* stroke: var(--highlight-color);
+  stroke-width: 1.5px; */
+  fill: var(--highlight-color);
 }
 
 #state-tooltip rect {
@@ -83,7 +100,21 @@ body {
   dominant-baseline: middle;
 }
 
-#legend {
+.legend {
+  display: flex;
+  flex-direction: row;
+}
+
+.legend p {
+  margin: 10px;
+}
+
+.legend p:first-child {
+  margin-left: 0;
+}
+
+#legend-bar {
+  align-self: center;
   width: 50%;
   height: 20px;
   background: rgba(0, 212, 255, 1);
@@ -123,6 +154,14 @@ g.us-year text {
 g.us-year:hover rect,
 g.us-year:hover text {
   opacity: 1;
+}
+
+.legend-chart {
+  justify-content: space-between;
+}
+
+p.chart-selected {
+  color: var(--highlight-color);
 }
 
 @media only screen and (max-width: 600px) {
