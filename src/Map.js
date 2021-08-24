@@ -57,13 +57,14 @@ const Map = ({ mapDimensions }) => {
       // ** SELECT state
 
       svg.on('click', (e) => {
-        let selectedStateEl =
-          document.querySelector(`#${selectedState}`) || null;
+        let selectedStateEl = document.querySelector(`#${selectedState}`);
 
         //if empty area clicked
         if (e.target.tagName === 'svg') {
-          selectedStateEl.classList.remove('selected-state');
-          setSelectedState(null);
+          if (selectedState) {
+            selectedStateEl.classList.remove('selected-state');
+            setSelectedState(null);
+          }
           // if map element clicked
         } else {
           let clickedStateName = '';
