@@ -45,6 +45,7 @@ body {
 
 .chart-wrapper {
   height: calc(100vh - 160px);
+  padding: 50px 0;
 }
 
 .chart-wrapper,
@@ -105,11 +106,11 @@ path.selected-state {
   flex-direction: row;
 }
 
-.legend p {
+.legend-map p {
   margin: 10px;
 }
 
-.legend p:first-child {
+.legend-map p:first-child {
   margin-left: 0;
 }
 
@@ -127,6 +128,28 @@ path.selected-state {
 
 /* CHART */
 
+.legend-chart {
+  justify-content: space-between;
+  padding-right: 35px;
+}
+
+.chart-selected {
+  margin-right: 0;
+}
+
+p.chart-selected {
+  color: var(--highlight-color);
+}
+
+g.tick > line {
+  stroke-width: 1px;
+  stroke-dasharray: 2 8;
+}
+/* psa chart axes lines */
+path.domain {
+  stroke-width: 1.5px;
+}
+
 path.us-line {
   fill: none;
   stroke: var(--primary-color);
@@ -143,7 +166,8 @@ g.us-year rect {
   transition: opacity 0.25s;
 }
 
-g.us-year text {
+g.us-year text,
+g.state-year text {
   text-anchor: middle;
   fill: var(--background);
   font-size: 14px;
@@ -151,17 +175,27 @@ g.us-year text {
   transition: opacity 0.25s;
 }
 
+path.state-line {
+  fill: none;
+  stroke: var(--highlight-color);
+  stroke-width: 4;
+}
+
+g.state-year circle {
+  fill: var(--highlight-color);
+}
+
+g.state-year rect {
+  fill: var(--highlight-color);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
 g.us-year:hover rect,
-g.us-year:hover text {
+g.us-year:hover text,
+g.state-year:hover rect,
+g.state-year:hover text {
   opacity: 1;
-}
-
-.legend-chart {
-  justify-content: space-between;
-}
-
-p.chart-selected {
-  color: var(--highlight-color);
 }
 
 @media only screen and (max-width: 600px) {

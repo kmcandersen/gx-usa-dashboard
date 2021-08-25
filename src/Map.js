@@ -157,10 +157,10 @@ const Map = ({ mapDimensions }) => {
           <UsMap ref={svgRef} />
         </div>
         {stateTotRange && (
-          <div className='legend'>
+          <div className='legend legend-map'>
             <p>{stateTotRange[0]}</p>
             <div id='legend-bar'></div>
-            <p>{stateTotRange[1]}</p>
+            <p>{stateTotRange[1].toLocaleString()}</p>
           </div>
         )}
       </div>

@@ -9,15 +9,28 @@ import {
   scaleLinear,
   select,
 } from 'd3';
+import statesList from './assets/state_names.js';
 import DataContext from './context/DataContext';
 import './App.css';
 
 const Chart = ({ chartDimensions }) => {
-  const { usData } = useContext(DataContext);
-  const { selectedState } = useContext(DataContext);
+  const { usData, stateYrData, selectedState } = useContext(DataContext);
   const [svgDimensions, setSvgDimensions] = useState();
+  const [fullSelectedState, setFullSelectedState] = useState();
 
   const svgRef = useRef();
+
+  useEffect(() => {
+    if (selectedState) {
+      statesList.forEach((el) => {
+        for (let key in el) {
+          if (key === selectedState) {
+            setFullSelectedState(el[selectedState]);
+          }
+        }
+      });
+    }
+  }, [selectedState]);
 
   useEffect(() => {
     if (chartDimensions) {
@@ -26,14 +39,14 @@ const Chart = ({ chartDimensions }) => {
         height: chartDimensions.height * 0.8,
         margin: {
           left: 35,
-          right: 30,
-          top: 20,
-          bottom: 20,
+          right: 50,
+          top: 75,
+          bottom: 30,
         },
       });
     }
 
-    if (usData && svgDimensions) {
+    if (usData && stateYrData && svgDimensions) {
       let boundedDimensions = {
         height:
           svgDimensions.height -
@@ -44,7 +57,6 @@ const Chart = ({ chartDimensions }) => {
           svgDimensions.margin.left -
           svgDimensions.margin.right,
       };
-
       const svg = select(svgRef.current);
       svg
         .attr('width', svgDimensions.width)
@@ -66,9 +78,9 @@ const Chart = ({ chartDimensions }) => {
       const xAxisGenerator = axisBottom()
         .scale(xScale)
         .ticks(usData.length)
-        // .tickSizeInner(-boundedDimensions.height + 10)
-        // .tickSizeOuter(0)
-        // .tickPadding(10)
+        .tickSizeInner(-boundedDimensions.height + 10)
+        .tickSizeOuter(0)
+        .tickPadding(10)
         .tickFormat(format('d'));
       select('.x-axis')
         .call(xAxisGenerator)
@@ -77,42 +89,35 @@ const Chart = ({ chartDimensions }) => {
           `translate(${svgDimensions.margin.left}px, ${boundedDimensions.height}px`
         );
 
-      const yAxisGenerator = axisLeft().scale(yScale).ticks(8);
-      // .tickSizeInner(-boundedDimensions.width - 10)
-      // .tickSizeOuter(0)
-      // .tickPadding(10);
+      const yAxisGenerator = axisLeft()
+        .scale(yScale)
+        .ticks(8)
+        .tickSizeInner(-boundedDimensions.width - 10)
+        .tickSizeOuter(0)
+        .tickPadding(10);
       select('.y-axis')
         .call(yAxisGenerator)
         .style('transform', `translate(${svgDimensions.margin.left}px, -10px)`);
 
-      const usPathGenerator = line()
+      const pathGenerator = line()
         .x((d) => xScale(xAccessor(d)))
         .y((d) => yScale(yAccessor(d)));
+
       svg
         .selectAll('path.us-line')
         .data([usData])
         .join('path')
-        .attr('d', usPathGenerator)
+        .attr('d', pathGenerator)
         .attr('class', 'us-line')
         .attr('data-id', (d) => yAccessor(d))
-        .style(
-          'transform',
-          `translate(${svgDimensions.margin.left}px, ${svgDimensions.margin.top}px`
-        )
-        .style('opacity', 0)
-        .transition()
-        .duration(1000)
-        .style('opacity', 1);
+        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
 
       const usYears = svg
         .selectAll('g.us-year')
         .data(usData)
         .join('g')
         .attr('class', 'us-year')
-        .style(
-          'transform',
-          `translate(${svgDimensions.margin.left}px, ${svgDimensions.margin.top}px`
-        );
+        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
       usYears.selectAll('circle').remove();
 
       usYears
@@ -121,11 +126,7 @@ const Chart = ({ chartDimensions }) => {
         .attr('cy', (d) => yScale(yAccessor(d)))
         .attr('r', 0)
         .transition()
-        .attr('r', 5)
-        .style('opacity', 0)
-        .transition()
-        .duration(1000)
-        .style('opacity', 1);
+        .attr('r', 5);
 
       usYears.selectAll('rect').remove();
       usYears
@@ -141,23 +142,62 @@ const Chart = ({ chartDimensions }) => {
         .append('text')
         .attr('x', (d) => xScale(xAccessor(d)))
         .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
-        .attr('fill', 'red')
-        .attr('text-anchor', 'middle')
         .text((d) => d.TOTINC.toLocaleString());
 
+      // STATE
       svg
-        .selectAll('g.us-year')
+        .selectAll('path.state-line')
+        .data([stateYrData])
+        .join('path')
+        .attr('d', pathGenerator)
+        .attr('class', 'state-line')
+        .attr('data-id', (d) => yAccessor(d))
+        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`)
+        .style('opacity', 0)
         .transition()
-        .duration(500)
-        .style(
-          'transform',
-          `translate(${svgDimensions.margin.left}px, ${svgDimensions.margin.top}px`
-        );
+        .duration(1000)
+        .style('opacity', 1);
+
+      const stateYears = svg
+        .selectAll('g.state-year')
+        .data(stateYrData)
+        .join('g')
+        .attr('class', 'state-year')
+        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
+      stateYears.selectAll('circle').remove();
+
+      stateYears
+        .append('circle')
+        .attr('cx', (d) => xScale(xAccessor(d)))
+        .attr('cy', (d) => yScale(yAccessor(d)))
+        .attr('r', 0)
+        .transition()
+        .attr('r', 5)
+        .style('opacity', 0)
+        .transition()
+        .duration(1000)
+        .style('opacity', 1);
+
+      stateYears.selectAll('rect').remove();
+      stateYears
+        .append('rect')
+        .attr('x', (d) => xScale(xAccessor(d)) - 30)
+        .attr('y', (d) => yScale(yAccessor(d)) - 35)
+        .attr('width', 60)
+        .attr('height', 25)
+        .attr('fill', 'orange');
+
+      stateYears.selectAll('text').remove();
+      stateYears
+        .append('text')
+        .attr('x', (d) => xScale(xAccessor(d)))
+        .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
+        .text((d) => d.TOTINC.toLocaleString());
     }
-  }, [usData, chartDimensions, selectedState]);
+  }, [usData, chartDimensions, selectedState, stateYrData]);
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <h2>Incidents by year</h2>
       <div className='legend legend-chart'>
         <div className='legend-us'>
@@ -165,7 +205,7 @@ const Chart = ({ chartDimensions }) => {
         </div>
         <div className='legend-state'>
           {selectedState ? (
-            <p className='chart-selected'>{selectedState}</p>
+            <p className='chart-selected'>{fullSelectedState}</p>
           ) : (
             <p className='instructions'>Select a state on map</p>
           )}

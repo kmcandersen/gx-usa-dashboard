@@ -17,10 +17,10 @@ const App = () => {
   if (window.innerWidth < 640) {
     return (
       <main className='app-wrapper'>
-        <Header />
-
-        {/* <Chart /> */}
-        <Stats />
+        {/* <Header />
+        <Map />
+        <Chart />
+        <Stats /> */}
       </main>
     );
   } else {

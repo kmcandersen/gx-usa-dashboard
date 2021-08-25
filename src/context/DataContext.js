@@ -8,11 +8,13 @@ const DataContext = React.createContext();
 
 export const DataProvider = ({ children }) => {
   const [usData, setUSData] = useState();
+  const [stateYrDataAll, setStateYrDataAll] = useState();
   const [stateYrData, setStateYrData] = useState();
   const [stateTotData, setStateTotData] = useState();
   const [selectedState, setSelectedState] = useState();
   const [error, setError] = useState(null);
 
+  // for Chart
   const getUsData = async () => {
     try {
       setError(null);
@@ -28,7 +30,7 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const getStateYrData = async () => {
+  const getStateYrDataAll = async () => {
     try {
       setError(null);
       const dataset = await csv(stDataCsv);
@@ -46,12 +48,21 @@ export const DataProvider = ({ children }) => {
         d.TOTINJ = +d.TOTINJ;
         d.TOTKLD = +d.TOTKLD;
       });
-      setStateYrData(dataset);
+
+      setStateYrDataAll(dataset);
     } catch (error) {
       setError(error.toString());
     }
   };
 
+  const getStateYrData = (selectedState = 'AL') => {
+    const singleStateData = stateYrDataAll.filter(
+      (el) => el.STATE === selectedState
+    );
+    setStateYrData(singleStateData);
+  };
+
+  // for Map
   const getStateTotData = async () => {
     try {
       setError(null);
@@ -68,9 +79,15 @@ export const DataProvider = ({ children }) => {
 
   useEffect(() => {
     getUsData();
-    getStateYrData();
     getStateTotData();
+    getStateYrDataAll();
   }, []);
+
+  useEffect(() => {
+    if (stateYrDataAll) {
+      getStateYrData(selectedState);
+    }
+  }, [selectedState]);
 
   return (
     <DataContext.Provider
