@@ -17,8 +17,19 @@ const Chart = ({ chartDimensions }) => {
   const { usData, stateYrData, selectedState } = useContext(DataContext);
   const [svgDimensions, setSvgDimensions] = useState();
   const [fullSelectedState, setFullSelectedState] = useState();
+  const [showUSData, setShowUSData] = useState(true);
 
   const svgRef = useRef();
+
+  const findMax = (arr, prop) => {
+    var highest = 0;
+    var tmp;
+    arr.forEach((el) => {
+      tmp = el[prop];
+      if (tmp > highest) highest = tmp;
+    });
+    return highest;
+  };
 
   useEffect(() => {
     if (selectedState) {
@@ -29,6 +40,9 @@ const Chart = ({ chartDimensions }) => {
           }
         }
       });
+      setShowUSData(false);
+    } else {
+      setShowUSData(true);
     }
   }, [selectedState]);
 
@@ -65,13 +79,42 @@ const Chart = ({ chartDimensions }) => {
       const xAccessor = (d) => d.YEAR;
       const yAccessor = (d) => d.TOTINC;
 
+      const datasetForYScale =
+        selectedState && showUSData
+          ? usData
+          : selectedState
+          ? stateYrData
+          : usData;
+
+      const maxTotInc = findMax(datasetForYScale, 'TOTINC');
+      const yTicksQty = maxTotInc > 15 ? 6 : maxTotInc > 5 ? 7 : 4;
+      const calcAddToYDomain = () => {
+        switch (true) {
+          case maxTotInc > 1500:
+            return 100;
+          case maxTotInc > 150:
+            return 30;
+          case maxTotInc > 100:
+            return 20;
+          case maxTotInc > 30:
+            return 5;
+          case maxTotInc > 5:
+            return 1;
+          case maxTotInc === 0:
+            return 0;
+          default:
+            return 0.5;
+        }
+      };
+      const addToYDomain = calcAddToYDomain();
+
       let xScale = scaleLinear()
         .domain(extent(usData, xAccessor))
         .range([10, boundedDimensions.width + 10])
         .nice();
       let yScale = scaleLinear()
-        // US always > state
-        .domain([0, max(usData, yAccessor)])
+        // + space so line not at top of chart
+        .domain([0, max(datasetForYScale, yAccessor) + addToYDomain])
         .range([boundedDimensions.height - 10, 20])
         .nice();
 
@@ -91,7 +134,7 @@ const Chart = ({ chartDimensions }) => {
 
       const yAxisGenerator = axisLeft()
         .scale(yScale)
-        .ticks(8)
+        .ticks(yTicksQty)
         .tickSizeInner(-boundedDimensions.width - 10)
         .tickSizeOuter(0)
         .tickPadding(10);
@@ -103,48 +146,57 @@ const Chart = ({ chartDimensions }) => {
         .x((d) => xScale(xAccessor(d)))
         .y((d) => yScale(yAccessor(d)));
 
-      svg
-        .selectAll('path.us-line')
-        .data([usData])
-        .join('path')
-        .attr('d', pathGenerator)
-        .attr('class', 'us-line')
-        .attr('data-id', (d) => yAccessor(d))
-        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
+      // US - added/removed based on showUSData
+      if (showUSData) {
+        svg
+          .selectAll('path.us-line')
+          .data([usData])
+          .join('path')
+          .attr('d', pathGenerator)
+          .attr('class', 'us-line')
+          .attr('data-id', (d) => yAccessor(d))
+          .style(
+            'transform',
+            `translate(${svgDimensions.margin.left}px, -10px`
+          );
 
-      const usYears = svg
-        .selectAll('g.us-year')
-        .data(usData)
-        .join('g')
-        .attr('class', 'us-year')
-        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
-      usYears.selectAll('circle').remove();
+        const usYears = svg
+          .selectAll('g.us-year')
+          .data(usData)
+          .join('g')
+          .attr('class', 'us-year')
+          .style(
+            'transform',
+            `translate(${svgDimensions.margin.left}px, -10px`
+          );
 
-      usYears
-        .append('circle')
-        .attr('cx', (d) => xScale(xAccessor(d)))
-        .attr('cy', (d) => yScale(yAccessor(d)))
-        .attr('r', 0)
-        .transition()
-        .attr('r', 5);
+        usYears
+          .append('circle')
+          .attr('cx', (d) => xScale(xAccessor(d)))
+          .attr('cy', (d) => yScale(yAccessor(d)))
+          .attr('r', 0)
+          .transition()
+          .attr('r', 5);
 
-      usYears.selectAll('rect').remove();
-      usYears
-        .append('rect')
-        .attr('x', (d) => xScale(xAccessor(d)) - 30)
-        .attr('y', (d) => yScale(yAccessor(d)) - 35)
-        .attr('width', 60)
-        .attr('height', 25)
-        .attr('fill', 'blue');
+        usYears
+          .append('rect')
+          .attr('x', (d) => xScale(xAccessor(d)) - 30)
+          .attr('y', (d) => yScale(yAccessor(d)) - 35)
+          .attr('width', 60)
+          .attr('height', 25)
+          .attr('fill', 'blue');
 
-      usYears.selectAll('text').remove();
-      usYears
-        .append('text')
-        .attr('x', (d) => xScale(xAccessor(d)))
-        .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
-        .text((d) => d.TOTINC.toLocaleString());
+        usYears
+          .append('text')
+          .attr('x', (d) => xScale(xAccessor(d)))
+          .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
+          .text((d) => d.TOTINC.toLocaleString());
+      } else {
+        svg.selectAll('path.us-line').remove();
+        svg.selectAll('.us-year').remove();
+      }
 
-      // STATE
+      // STATE - added/removed based on selectedState
       svg
         .selectAll('path.state-line')
         .data([stateYrData])
@@ -194,7 +246,7 @@ const Chart = ({ chartDimensions }) => {
         .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
         .text((d) => d.TOTINC.toLocaleString());
     }
-  }, [usData, chartDimensions, selectedState, stateYrData]);
+  }, [chartDimensions, usData, stateYrData, selectedState, showUSData]);
 
   return (
     <div style={{ height: '100%' }}>
