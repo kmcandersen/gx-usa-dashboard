@@ -9,6 +9,8 @@ import {
   scaleLinear,
   select,
 } from 'd3';
+import { ReactComponent as EmptySquare } from './assets/square.svg';
+import { ReactComponent as CheckedSquare } from './assets/check-square.svg';
 import statesList from './assets/state_names.js';
 import DataContext from './context/DataContext';
 import './App.css';
@@ -18,6 +20,7 @@ const Chart = ({ chartDimensions }) => {
   const [svgDimensions, setSvgDimensions] = useState();
   const [fullSelectedState, setFullSelectedState] = useState();
   const [showUSData, setShowUSData] = useState(true);
+  const [isFirstStateSelected, setIsFirstStateSelected] = useState(true);
 
   const svgRef = useRef();
 
@@ -40,9 +43,15 @@ const Chart = ({ chartDimensions }) => {
           }
         }
       });
-      setShowUSData(false);
+      // hides US line the first time user selects a state; if user turns on the US line & keeps selecting states, US line stays on.
+      if (isFirstStateSelected) {
+        setShowUSData(false);
+        setIsFirstStateSelected(false);
+      }
+      // always shows US line when no state is selected
     } else {
       setShowUSData(true);
+      setIsFirstStateSelected(true);
     }
   }, [selectedState]);
 
@@ -160,6 +169,7 @@ const Chart = ({ chartDimensions }) => {
             `translate(${svgDimensions.margin.left}px, -10px`
           );
 
+        svg.selectAll('.us-year').remove();
         const usYears = svg
           .selectAll('g.us-year')
           .data(usData)
@@ -197,54 +207,58 @@ const Chart = ({ chartDimensions }) => {
       }
 
       // STATE - added/removed based on selectedState
-      svg
-        .selectAll('path.state-line')
-        .data([stateYrData])
-        .join('path')
-        .attr('d', pathGenerator)
-        .attr('class', 'state-line')
-        .attr('data-id', (d) => yAccessor(d))
-        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`)
-        .style('opacity', 0)
-        .transition()
-        .duration(1000)
-        .style('opacity', 1);
+      if (selectedState) {
+        svg.selectAll('path.state-line').remove();
+        svg.selectAll('g.state-year').remove();
 
-      const stateYears = svg
-        .selectAll('g.state-year')
-        .data(stateYrData)
-        .join('g')
-        .attr('class', 'state-year')
-        .style('transform', `translate(${svgDimensions.margin.left}px, -10px`);
-      stateYears.selectAll('circle').remove();
+        svg
+          .selectAll('path.state-line')
+          .data([stateYrData])
+          .join('path')
+          .attr('d', pathGenerator)
+          .attr('class', 'state-line')
+          .attr('data-id', (d) => yAccessor(d))
+          .style('transform', `translate(${svgDimensions.margin.left}px, -10px`)
+          .style('opacity', 0)
+          .transition()
+          .duration(500)
+          .style('opacity', 1);
 
-      stateYears
-        .append('circle')
-        .attr('cx', (d) => xScale(xAccessor(d)))
-        .attr('cy', (d) => yScale(yAccessor(d)))
-        .attr('r', 0)
-        .transition()
-        .attr('r', 5)
-        .style('opacity', 0)
-        .transition()
-        .duration(1000)
-        .style('opacity', 1);
+        const stateYear = svg
+          .selectAll('g.state-year')
+          .data(stateYrData)
+          .join('g')
+          .attr('class', 'state-year')
+          .style(
+            'transform',
+            `translate(${svgDimensions.margin.left}px, -10px`
+          );
 
-      stateYears.selectAll('rect').remove();
-      stateYears
-        .append('rect')
-        .attr('x', (d) => xScale(xAccessor(d)) - 30)
-        .attr('y', (d) => yScale(yAccessor(d)) - 35)
-        .attr('width', 60)
-        .attr('height', 25)
-        .attr('fill', 'orange');
+        stateYear
+          .append('circle')
+          .attr('cx', (d) => xScale(xAccessor(d)))
+          .attr('cy', (d) => yScale(yAccessor(d)))
+          .attr('r', 0)
+          .transition()
+          .attr('r', 5);
 
-      stateYears.selectAll('text').remove();
-      stateYears
-        .append('text')
-        .attr('x', (d) => xScale(xAccessor(d)))
-        .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
-        .text((d) => d.TOTINC.toLocaleString());
+        stateYear
+          .append('rect')
+          .attr('x', (d) => xScale(xAccessor(d)) - 30)
+          .attr('y', (d) => yScale(yAccessor(d)) - 35)
+          .attr('width', 60)
+          .attr('height', 25)
+          .attr('fill', 'orange');
+
+        stateYear
+          .append('text')
+          .attr('x', (d) => xScale(xAccessor(d)))
+          .attr('y', (d) => yScale(yAccessor(d)) - 25 / 2 - 5)
+          .text((d) => d.TOTINC.toLocaleString());
+      } else {
+        svg.selectAll('path.state-line').remove();
+        svg.selectAll('g.state-year').remove();
+      }
     }
   }, [chartDimensions, usData, stateYrData, selectedState, showUSData]);
 
@@ -263,6 +277,24 @@ const Chart = ({ chartDimensions }) => {
           )}
         </div>
       </div>
+
+      <div
+        id='show-us-line-toggle'
+        style={{ visibility: `${!selectedState ? `hidden` : `visible`}` }}
+      >
+        {selectedState && !showUSData ? (
+          <>
+            <EmptySquare onClick={() => setShowUSData(true)} />
+            <p>Show US data</p>
+          </>
+        ) : selectedState && showUSData ? (
+          <>
+            <CheckedSquare onClick={() => setShowUSData(false)} />
+            <p>Hide US data</p>
+          </>
+        ) : null}
+      </div>
+
       <p className='instructions'>Hover on a point to view totals</p>
       <svg ref={svgRef}>
         <g className='x-axis' />

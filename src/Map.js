@@ -59,8 +59,8 @@ const Map = ({ mapDimensions }) => {
       svg.on('click', (e) => {
         let selectedStateEl = document.querySelector(`#${selectedState}`);
 
-        //if empty area clicked
-        if (e.target.tagName === 'svg') {
+        //if empty area clicked (e.target.tagName === 'svg' conflicts with click on svg check icons in Chart)
+        if (e.target.id === 'us-map') {
           if (selectedState) {
             selectedStateEl.classList.remove('selected-state');
             setSelectedState(null);

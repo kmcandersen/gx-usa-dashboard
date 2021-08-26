@@ -137,6 +137,19 @@ path.selected-state {
   margin-right: 0;
 }
 
+#show-us-line-toggle {
+  display: flex;
+  align-items: center;
+  height: 51px;
+}
+
+#show-us-line-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--primary-color);
+  margin-right: 8px;
+}
+
 p.chart-selected {
   color: var(--highlight-color);
 }
