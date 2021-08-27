@@ -69,7 +69,7 @@ const Chart = ({ chartDimensions }) => {
       });
     }
 
-    if (usData && stateYrData && svgDimensions) {
+    if (usData && svgDimensions) {
       let boundedDimensions = {
         height:
           svgDimensions.height -
@@ -207,7 +207,7 @@ const Chart = ({ chartDimensions }) => {
       }
 
       // STATE - added/removed based on selectedState
-      if (selectedState) {
+      if (selectedState && stateYrData) {
         svg.selectAll('path.state-line').remove();
         svg.selectAll('g.state-year').remove();
 
