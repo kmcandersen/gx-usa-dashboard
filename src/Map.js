@@ -143,31 +143,31 @@ const Map = ({ mapDimensions }) => {
   }, [mapDimensions, stateTotData, selectedState]);
   if (mapDimensions && stateTotData) {
     return (
-      <div>
-        <h2>Collisions by state</h2>
-        <p className='instructions'>
-          Hover on a state to view totals; click to show details
-        </p>
-        <div
-          style={{
-            width: mapDimensions.width * 0.9,
-            height: mapDimensions.width * 0.9 * 0.62,
-            margin: '0 auto',
-
-            // width: '100%',
-            // height: '100%',
-            // padding: '30px',
-          }}
-        >
-          <UsMap ref={svgRef} />
+      <div style={{ height: '100%' }}>
+        <div>
+          <h2>Collisions by state</h2>
+          <p className='instructions'>
+            Hover on a state to view totals; click to show details
+          </p>
         </div>
-        {stateTotRange && (
-          <div className='legend legend-map'>
-            <p>{stateTotRange[0]}</p>
-            <div id='legend-bar'></div>
-            <p>{stateTotRange[1].toLocaleString()}</p>
+        <div className='map-content'>
+          <div
+            style={{
+              width: mapDimensions.width * 0.95,
+              height: mapDimensions.width * 0.95 * 0.62,
+              margin: '0 auto',
+            }}
+          >
+            <UsMap ref={svgRef} />
           </div>
-        )}
+          {stateTotRange && (
+            <div className='legend legend-map'>
+              <p>{stateTotRange[0]}</p>
+              <div id='legend-bar'></div>
+              <p>{stateTotRange[1].toLocaleString()}</p>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

@@ -64,10 +64,9 @@ body {
   height: calc(100vh - 100px - 160px);
 }
 
-.map-wrapper,
-.stats-wrapper {
-  /* height: 50%; */
-  border: 0.25px solid red;
+.map-wrapper {
+  height: 60%;
+  /* border-bottom: 0.25px solid red; */
 }
 
 .stats-wrapper {
@@ -98,6 +97,14 @@ body {
 
 .map-wrapper p.instructions {
   margin-bottom: 16px;
+}
+
+.map-content {
+  /* border-bottom: 0.25px solid red; */
+  height: calc(100% - 78.91px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 svg#us-map:hover {
@@ -134,6 +141,7 @@ path.selected-state {
 .legend-map {
   width: 90%;
   margin: 0 auto;
+  padding-top: 10px;
 }
 
 .legend-map p {
