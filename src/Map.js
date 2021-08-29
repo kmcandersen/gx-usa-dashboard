@@ -144,7 +144,7 @@ const Map = ({ mapDimensions }) => {
   if (mapDimensions && stateTotData) {
     return (
       <div>
-        <h2>Total incidents by state</h2>
+        <h2>Collisions by state</h2>
         <p className='instructions'>
           Hover on a state to view totals; click to show details
         </p>
@@ -152,6 +152,11 @@ const Map = ({ mapDimensions }) => {
           style={{
             width: mapDimensions.width * 0.9,
             height: mapDimensions.width * 0.9 * 0.62,
+            margin: '0 auto',
+
+            // width: '100%',
+            // height: '100%',
+            // padding: '30px',
           }}
         >
           <UsMap ref={svgRef} />

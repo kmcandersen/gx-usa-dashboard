@@ -58,13 +58,15 @@ const Chart = ({ chartDimensions }) => {
   useEffect(() => {
     if (chartDimensions) {
       setSvgDimensions({
-        width: chartDimensions.width * 0.9,
-        height: chartDimensions.height * 0.8,
+        width: chartDimensions.width,
+        // cd.height - top elements
+        height: chartDimensions.height - 178.91,
+
         margin: {
           left: 35,
-          right: 50,
-          top: 75,
-          bottom: 30,
+          right: 40,
+          top: 0,
+          bottom: 18,
         },
       });
     }
@@ -263,39 +265,41 @@ const Chart = ({ chartDimensions }) => {
   }, [chartDimensions, usData, stateYrData, selectedState, showUSData]);
 
   return (
-    <div style={{ height: '100%' }}>
-      <h2>Incidents by year</h2>
-      <div className='legend legend-chart'>
-        <div className='legend-us'>
-          <p>United States</p>
+    <div style={{ width: '100%', height: '100%' }}>
+      <div>
+        <h2>Collisions by year</h2>
+        <div className='legend legend-chart'>
+          <div className='legend-us'>
+            <p>United States</p>
+          </div>
+          <div className='legend-state'>
+            {selectedState ? (
+              <p className='chart-selected'>{fullSelectedState}</p>
+            ) : (
+              <p className='subtitle'>Select a state on map</p>
+            )}
+          </div>
         </div>
-        <div className='legend-state'>
-          {selectedState ? (
-            <p className='chart-selected'>{fullSelectedState}</p>
-          ) : (
-            <p className='instructions'>Select a state on map</p>
-          )}
+
+        <div
+          id='show-us-line-toggle'
+          style={{ visibility: `${!selectedState ? `hidden` : `visible`}` }}
+        >
+          {selectedState && !showUSData ? (
+            <>
+              <EmptySquare onClick={() => setShowUSData(true)} />
+              <p>Show US data</p>
+            </>
+          ) : selectedState && showUSData ? (
+            <>
+              <CheckedSquare onClick={() => setShowUSData(false)} />
+              <p>Hide US data</p>
+            </>
+          ) : null}
         </div>
-      </div>
 
-      <div
-        id='show-us-line-toggle'
-        style={{ visibility: `${!selectedState ? `hidden` : `visible`}` }}
-      >
-        {selectedState && !showUSData ? (
-          <>
-            <EmptySquare onClick={() => setShowUSData(true)} />
-            <p>Show US data</p>
-          </>
-        ) : selectedState && showUSData ? (
-          <>
-            <CheckedSquare onClick={() => setShowUSData(false)} />
-            <p>Hide US data</p>
-          </>
-        ) : null}
+        <p className='instructions'>Hover on a point to view totals</p>
       </div>
-
-      <p className='instructions'>Hover on a point to view totals</p>
       <svg ref={svgRef}>
         <g className='x-axis' />
         <g className='y-axis' />

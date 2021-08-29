@@ -6,61 +6,74 @@
   --background: #fff;
   --gray: #808080;
   --dark-color: #000;
+  --auto: #f9d054;
+  --truck: #2676d3;
+  --ped-bike: #ec564c;
+  --other: #abc549;
 }
 
 * {
-  border: 1px solid red;
-  box-sizing: border-box;
+  /* border: 0.25px solid red; */
+  /* box-sizing: border-box; */
 }
+
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: Work Sans;
   color: var(--primary-color);
+}
+
+#root {
+  /* height here removes vert centering */
+  width: 100%;
+  max-width: 1450px;
 }
 
 .instructions {
   font-size: 0.8rem;
   font-style: italic;
   color: var(--gray);
+  margin-top: 0;
+}
+
+.subtitle {
+  color: var(--gray);
 }
 
 .app-wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: auto;
   display: flex;
-  flex-flow: row wrap;
+  padding: 50px;
 }
 .col-left {
-  width: 60%;
+  width: 50%;
+  padding-right: 50px;
 }
 .col-right {
-  width: 40%;
+  width: 50%;
+  padding-left: 50px;
 }
 
 .chart-wrapper {
-  height: calc(100vh - 160px);
-  padding: 50px 0;
+  /* subtract padding & header */
+  height: calc(100vh - 100px - 160px);
 }
 
-.chart-wrapper,
-.map-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.map-wrapper {
-  height: 60%;
+.map-wrapper,
+.stats-wrapper {
+  /* height: 50%; */
+  border: 0.25px solid red;
 }
 
 .stats-wrapper {
-  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 /* HEADER */
@@ -78,6 +91,18 @@ body {
 }
 
 /* MAP */
+
+.map-wrapper h2 {
+  margin-top: 0;
+}
+
+.map-wrapper p.instructions {
+  margin-bottom: 16px;
+}
+
+svg#us-map:hover {
+  cursor: pointer;
+}
 
 path.border {
   stroke: var(--background);
@@ -104,6 +129,11 @@ path.selected-state {
 .legend {
   display: flex;
   flex-direction: row;
+}
+
+.legend-map {
+  width: 90%;
+  margin: 0 auto;
 }
 
 .legend-map p {
@@ -133,6 +163,17 @@ path.selected-state {
   padding-right: 35px;
 }
 
+.legend-chart p {
+  margin: 0;
+}
+
+.legend-us p,
+.legend-state .chart-selected p {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin: 0;
+}
+
 .chart-selected {
   margin-right: 0;
 }
@@ -141,6 +182,7 @@ path.selected-state {
   display: flex;
   align-items: center;
   height: 51px;
+  padding-top: 10px;
 }
 
 #show-us-line-toggle svg {
@@ -158,7 +200,7 @@ g.tick > line {
   stroke-width: 1px;
   stroke-dasharray: 2 8;
 }
-/* psa chart axes lines */
+/* axes lines */
 path.domain {
   stroke-width: 1.5px;
 }
@@ -211,7 +253,7 @@ g.state-year:hover text {
   opacity: 1;
 }
 
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
   .app-wrapper {
     flex-flow: column nowrap;
     height: auto;
@@ -228,4 +270,4 @@ g.state-year:hover text {
   .map-wrapper {
     height: auto;
   }
-}
+} */
