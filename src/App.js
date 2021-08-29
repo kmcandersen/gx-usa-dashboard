@@ -11,8 +11,8 @@ const App = () => {
   const mapDimensions = useResizeObserver(MapRef);
   const ChartRef = useRef();
   const chartDimensions = useResizeObserver(ChartRef);
-  // const StatsRef = useRef();
-  // const statsDimensions = useResizeObserver(StatsRef);
+  const StatsRef = useRef();
+  const statsDimensions = useResizeObserver(StatsRef);
 
   // if (window.innerWidth < 640) {
   //   return (
@@ -36,9 +36,9 @@ const App = () => {
         <section className='map-wrapper' ref={MapRef}>
           {mapDimensions && <Map mapDimensions={mapDimensions} />}
         </section>
-        {/* <section className='stats-wrapper' ref={StatsRef}>
+        <section className='stats-wrapper' ref={StatsRef}>
           {statsDimensions && <Stats statsDimensions={statsDimensions} />}
-        </section> */}
+        </section>
       </div>
     </main>
   );

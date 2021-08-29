@@ -32,7 +32,7 @@ body {
 #root {
   /* height here removes vert centering */
   width: 100%;
-  max-width: 1450px;
+  max-width: 1250px;
 }
 
 .instructions {
@@ -70,9 +70,9 @@ body {
 }
 
 .stats-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  /* border: 0.25px solid red; */
+  margin-top: 5%;
+  height: 35%;
 }
 
 /* HEADER */
@@ -117,8 +117,6 @@ path.border {
 }
 
 path.selected-state {
-  /* stroke: var(--highlight-color);
-  stroke-width: 1.5px; */
   fill: var(--highlight-color);
 }
 
@@ -259,6 +257,116 @@ g.us-year:hover text,
 g.state-year:hover rect,
 g.state-year:hover text {
   opacity: 1;
+}
+
+/* STATS */
+
+.stats-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stats-title h3 {
+  margin-top: 0;
+}
+
+.stats-title h3:hover {
+  cursor: pointer;
+}
+
+.stats-title h3:first-child {
+  color: var(--primary-color);
+}
+
+.stats-title h3:last-child {
+  color: var(--highlight-color);
+}
+
+.stats-selected-us {
+  display: inline-block;
+  border-bottom: 4px solid var(--primary-color);
+}
+
+.stats-selected-state {
+  display: inline-block;
+  border-bottom: 4px solid var(--highlight-color);
+}
+
+.stats-range .subtitle {
+  margin: 0;
+}
+
+.stats-content {
+  display: flex;
+  /* background-color: antiquewhite; */
+}
+
+.stats-text {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
+.stats-text div > p:nth-child(2) {
+  /* margin-top: 0; */
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.stats-text div p:first-child {
+  margin-top: 20px;
+  margin-bottom: 4px;
+}
+
+.stats-text div p:last-child {
+  margin: 0;
+}
+
+.stats-pie {
+  width: 45%;
+}
+
+.stats-pie-legend {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25%;
+  padding-left: 10px;
+}
+
+.stats-pie-legend-title {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.stats-pie-legend-text {
+  font-size: 0.8rem;
+}
+
+.stats-pie-legend span:not(.sm-sp) {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  /* border-radius: 6px; */
+  margin-right: 3px;
+}
+
+div.auto span {
+  background-color: var(--auto);
+}
+
+div.truck span {
+  background-color: var(--truck);
+}
+
+div.ped-bike span:not(.sm-sp) {
+  background-color: var(--ped-bike);
+}
+
+div.other span {
+  background-color: var(--other);
 }
 
 /* @media only screen and (max-width: 600px) {
