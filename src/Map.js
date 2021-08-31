@@ -115,8 +115,10 @@ const Map = () => {
             .append('rect')
             .attr('x', bbCtr[0] - 35)
             .attr('y', bbCtr[1] - 12.5)
-            .attr('height', 25)
-            .attr('width', 70)
+            // same h as pie tooltip; + 1 for stroke
+            .attr('width', 71)
+            .attr('height', 26)
+            // needed in click handler
             .attr('class', hoveredState.id)
             .style('opacity', 0)
             .transition()
@@ -125,7 +127,8 @@ const Map = () => {
           stateTooltip
             .append('text')
             .attr('x', bbCtr[0])
-            .attr('y', bbCtr[1])
+            .attr('y', bbCtr[1] + 2)
+            // needed in click handler
             .attr('class', hoveredState.id)
             .text(
               `${hoveredState.id}: ${Number(

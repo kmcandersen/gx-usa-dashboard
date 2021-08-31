@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { arc, csv, pie, select } from 'd3';
+import { arc, csv, format, pie, select } from 'd3';
 import gxCountCsv from './assets/gxsumstateus.csv';
 import DataContext from './context/DataContext';
 import './App.css';
@@ -69,12 +69,16 @@ const Stats = () => {
         }
       }
     });
-    console.log(result);
     return result;
   };
 
   const getPieChartData = (obj) => {
-    return [obj.VEHAUTO, obj.VEHTRUCK, obj.VEHPED, obj.VEHOTHER];
+    return {
+      Auto: obj.VEHAUTO / obj.TOTINC,
+      Truck: obj.VEHTRUCK / obj.TOTINC,
+      Ped: obj.VEHPED / obj.TOTINC,
+      TotInc: obj.VEHOTHER / obj.TOTINC,
+    };
   };
 
   const getGxData = async () => {
@@ -123,7 +127,8 @@ const Stats = () => {
       // us or selectedState
       if (usDataByCategory) {
         const usPieChartData = getPieChartData(usDataByCategory);
-        const arcData = pieGenerator(usPieChartData);
+        const vehTypes = Object.keys(usPieChartData);
+        const arcData = pieGenerator(Object.values(usPieChartData));
         const arcGenerator = arc().innerRadius(50).outerRadius(100);
 
         const pieGroup = svg.select('.pie-group');
@@ -132,6 +137,9 @@ const Stats = () => {
           .data(arcData)
           .join('path')
           .attr('d', arcGenerator)
+          .attr('data-value', (d) => d.value)
+          // if desired for tooltip label
+          .attr('id', (d, i) => vehTypes[i])
           .style('fill', (d, i) => colors[i])
           .style(
             'transform',
@@ -139,6 +147,59 @@ const Stats = () => {
               svgDimensions.height / 2 + 18
             }px`
           );
+
+        // ** HOVER on pie
+
+        function getBoundingBoxCenter(element) {
+          var bbox = element.getBBox();
+          // return the center of the bounding box
+          return [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2];
+        }
+
+        svg.on('mouseover', (e) => {
+          // tooltip removed if mouse moves outside pie
+          if (e.target.tagName === 'svg') {
+            svg.select('g#pie-tooltip').remove();
+          }
+          if (e.target.tagName === 'path') {
+            svg.select('g#pie-tooltip').remove();
+            const hoveredPie = e.target;
+            const bbCtr = getBoundingBoxCenter(hoveredPie);
+            const pieTooltip = svg.append('g').attr('id', 'pie-tooltip');
+
+            pieTooltip
+              .append('rect')
+              .attr('x', bbCtr[0] - 25)
+              .attr('y', bbCtr[1] - 12.5)
+              .attr('height', 25)
+              .attr('width', 50)
+              .style(
+                'transform',
+                `translate(${svgDimensions.width / 2 + 15}px, ${
+                  svgDimensions.height / 2 + 18
+                }px`
+              )
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+            pieTooltip
+              .append('text')
+              .attr('x', bbCtr[0])
+              .attr('y', bbCtr[1])
+              .text(`${format('.0%')(hoveredPie.dataset.value)}`)
+              .style(
+                'transform',
+                `translate(${svgDimensions.width / 2 + 15}px, ${
+                  svgDimensions.height / 2 + 18
+                }px`
+              )
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+          }
+        });
       }
     }
   }, [usDataByCategory, stateDataByCategory]);

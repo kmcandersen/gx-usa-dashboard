@@ -127,10 +127,11 @@ path.selected-state {
   stroke-width: 0.5;
   fill: var(--background);
 }
+
 #state-tooltip text {
-  color: var(--dark-color);
   text-anchor: middle;
   dominant-baseline: middle;
+  fill: var(--dark-color);
 }
 
 .legend {
@@ -222,6 +223,7 @@ g.us-year circle {
   fill: var(--primary-color);
 }
 
+/* tooltip */
 g.us-year rect {
   fill: var(--primary-color);
   opacity: 0;
@@ -236,6 +238,7 @@ g.state-year text {
   opacity: 0;
   transition: opacity 0.25s;
 }
+/* */
 
 path.state-line {
   fill: none;
@@ -247,6 +250,7 @@ g.state-year circle {
   fill: var(--highlight-color);
 }
 
+/* tooltip */
 g.state-year rect {
   fill: var(--highlight-color);
   opacity: 0;
@@ -259,6 +263,7 @@ g.state-year:hover rect,
 g.state-year:hover text {
   opacity: 1;
 }
+/* */
 
 /* STATS */
 
@@ -322,6 +327,16 @@ g.state-year:hover text {
 
 .stats-text div p:last-child {
   margin: 0;
+}
+
+#pie-tooltip rect {
+  fill: var(--primary-color);
+}
+#pie-tooltip text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  /* color: var(--background); */
+  fill: #fff;
 }
 
 .stats-pie-legend {
