@@ -15,14 +15,26 @@ import statesList from './assets/state_names.js';
 import DataContext from './context/DataContext';
 import './App.css';
 
-const Chart = ({ chartDimensions }) => {
+const Chart = () => {
   const { usData, stateYrData, selectedState } = useContext(DataContext);
-  const [svgDimensions, setSvgDimensions] = useState();
   const [fullSelectedState, setFullSelectedState] = useState();
   const [showUSData, setShowUSData] = useState(true);
   const [isFirstStateSelected, setIsFirstStateSelected] = useState(true);
 
   const svgRef = useRef();
+  // top text div 135.91 + 19.92 h2 margin-top + 12.8 'hover' p margin-bottom
+  const topElementsHeight = 168.63;
+  // initial w/h from chart-wrapper
+  const svgDimensions = {
+    width: 555.5,
+    height: 490 - topElementsHeight,
+    margin: {
+      left: 25,
+      right: 40,
+      top: 0,
+      bottom: 18,
+    },
+  };
 
   const findMax = (arr, prop) => {
     var highest = 0;
@@ -56,22 +68,7 @@ const Chart = ({ chartDimensions }) => {
   }, [selectedState]);
 
   useEffect(() => {
-    if (chartDimensions) {
-      setSvgDimensions({
-        width: chartDimensions.width,
-        // cd.height - top elements
-        height: chartDimensions.height - 178.91,
-
-        margin: {
-          left: 35,
-          right: 40,
-          top: 0,
-          bottom: 18,
-        },
-      });
-    }
-
-    if (usData && svgDimensions) {
+    if (usData) {
       let boundedDimensions = {
         height:
           svgDimensions.height -
@@ -83,9 +80,7 @@ const Chart = ({ chartDimensions }) => {
           svgDimensions.margin.right,
       };
       const svg = select(svgRef.current);
-      svg
-        .attr('width', svgDimensions.width)
-        .attr('height', svgDimensions.height);
+      svg.attr('width', '100%').attr('height', svgDimensions.height);
 
       const xAccessor = (d) => d.YEAR;
       const yAccessor = (d) => d.TOTINC;
@@ -262,10 +257,10 @@ const Chart = ({ chartDimensions }) => {
         svg.selectAll('g.state-year').remove();
       }
     }
-  }, [chartDimensions, usData, stateYrData, selectedState, showUSData]);
+  }, [usData, stateYrData, selectedState, showUSData]);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <section className='chart-wrapper'>
       <div>
         <h2>Collisions by year</h2>
         <div className='legend legend-chart'>
@@ -304,7 +299,7 @@ const Chart = ({ chartDimensions }) => {
         <g className='x-axis' />
         <g className='y-axis' />
       </svg>
-    </div>
+    </section>
   );
 };
 

@@ -4,9 +4,8 @@ import gxCountCsv from './assets/gxsumstateus.csv';
 import DataContext from './context/DataContext';
 import './App.css';
 
-const Stats = ({ statsDimensions }) => {
+const Stats = () => {
   const { usData, stateYrData, selectedState } = useContext(DataContext);
-  const [svgDimensions, setSvgDimensions] = useState();
   const [fullSelectedState, setFullSelectedState] = useState();
   const [usDataByCategory, setUsDataByCategory] = useState();
   const [stateDataByCategory, setStateDataByCategory] = useState();
@@ -14,7 +13,26 @@ const Stats = ({ statsDimensions }) => {
   const [error, setError] = useState(null);
 
   const svgRef = useRef();
-  const topElementsHeight = 84.719;
+
+  // statsTitle 44.72 + statsRange 19
+  const topElementsHeight = 63.72;
+  const subSectionWidths = {
+    statsText: '30%',
+    pieChart: '46%',
+    pieChartDec: 0.46,
+    pieLegend: '24%',
+  };
+  const svgDimensions = {
+    // initial w/h from stats-wrapper
+    width: 454.5 * subSectionWidths.pieChartDec,
+    height: 227.5 - topElementsHeight,
+    margin: {
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10,
+    },
+  };
 
   const colors = [
     'var(--auto)',
@@ -51,6 +69,7 @@ const Stats = ({ statsDimensions }) => {
         }
       }
     });
+    console.log(result);
     return result;
   };
 
@@ -72,6 +91,7 @@ const Stats = ({ statsDimensions }) => {
     }
   };
 
+  // want US to always be available, in addition to any selected state
   useEffect(() => {
     if (usData) {
       setUsDataByCategory(sumDataByYear(usData));
@@ -91,20 +111,13 @@ const Stats = ({ statsDimensions }) => {
   // calc us or selected state veh data
 
   useEffect(() => {
-    const svg = select(svgRef.current);
+    if (usData) {
+      const svg = select(svgRef.current);
 
-    if (statsDimensions) {
-      setSvgDimensions({
-        width: statsDimensions.width * 0.5,
-        // stats height - top elements
-        height: statsDimensions.height - topElementsHeight,
-      });
-    }
-
-    if (svgDimensions) {
       svg
-        .attr('viewBox', `0 0 225 225`)
-        .attr('preserveAspectRatio', 'xMidYMid meet');
+        .attr('viewBox', `0 0 200 200`)
+        .attr('height', svgDimensions.height)
+        .attr('width', svgDimensions.width);
 
       const pieGenerator = pie();
       // us or selectedState
@@ -122,34 +135,42 @@ const Stats = ({ statsDimensions }) => {
           .style('fill', (d, i) => colors[i])
           .style(
             'transform',
-            `translate(${svgDimensions.width / 2}px, ${
-              svgDimensions.height / 2 + 20
+            `translate(${svgDimensions.width / 2 + 15}px, ${
+              svgDimensions.height / 2 + 18
             }px`
           );
       }
     }
-  }, [statsDimensions, usDataByCategory, stateDataByCategory]);
+  }, [usDataByCategory, stateDataByCategory]);
 
   return (
-    <div
-      style={{
-        width: '100%',
-      }}
-    >
-      <div className='stats-title'>
-        <h3 className={`${selectedState ? null : `stats-selected-us`}`}>
-          United States
-        </h3>
-        <h3 className={`${selectedState ? `stats-selected-state` : null}`}>
-          State Name
-        </h3>
-      </div>
-      <div className='stats-range'>
-        <p className='subtitle'>2016-2020</p>
+    <section className='stats-wrapper'>
+      <div>
+        <div className='stats-title'>
+          <h3 className={`${selectedState ? null : `stats-selected-us`}`}>
+            United States
+          </h3>
+          <h3 className={`${selectedState ? `stats-selected-state` : null}`}>
+            State Name
+          </h3>
+        </div>
+        <div className='stats-range'>
+          <p className='subtitle'>Total 2016-2020</p>
+        </div>
       </div>
       {usDataByCategory && (
-        <div className='stats-content'>
-          <div className='stats-text'>
+        <div
+          className='stats-content'
+          style={{
+            height: svgDimensions.height,
+          }}
+        >
+          <div
+            className='stats-text'
+            style={{
+              width: subSectionWidths.statsText,
+            }}
+          >
             <div>
               <p>Collisions:</p>
               <p>{usDataByCategory.TOTINC.toLocaleString()}</p>
@@ -167,56 +188,44 @@ const Stats = ({ statsDimensions }) => {
           </div>
           <div
             className='stats-pie'
-            style={
-              {
-                // border: '1px solid red',
-              }
-            }
+            style={{
+              width: subSectionWidths.pieChart,
+            }}
           >
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                // border: '1px solid red',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <svg
-                ref={svgRef}
-                style={
-                  {
-                    // border: '1px solid red',
-                  }
-                }
-              >
-                <g className='pie-group'></g>
-              </svg>
-            </div>
+            <svg ref={svgRef}>
+              <g className='pie-group'></g>
+            </svg>
           </div>
+
           {/* use data calc for map for totinc over time by state */}
-          <div className='stats-pie-legend'>
+          <div
+            className='stats-pie-legend'
+            style={{
+              width: subSectionWidths.pieLegend,
+            }}
+          >
             <p className='stats-pie-legend-title'>Collisions by Vehicle Type</p>
             <div className='stats-pie-legend-text'>
-              <div class='auto'>
+              <div className='auto'>
                 <span></span> Auto
               </div>
-              <div class='truck'>
+              <div className='truck'>
                 <span></span> Truck
               </div>
-              <div class='ped-bike'>
-                <span></span> Pedestrian<span className='sm-sp'>&#8198;</span>/
+              <div className='ped-bike'>
+                <span></span> Ped
+                <span className='sm-sp'>&#8198;</span>/
                 <span className='sm-sp'>&#8198;</span>
-                Bike
+                Bicycle
               </div>
-              <div class='other'>
+              <div className='other'>
                 <span></span> Other
               </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

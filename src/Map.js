@@ -4,7 +4,7 @@ import DataContext from './context/DataContext';
 import { ReactComponent as UsMap } from './assets/us_states_map.svg';
 import './App.css';
 
-const Map = ({ mapDimensions }) => {
+const Map = () => {
   const { stateTotData } = useContext(DataContext);
   const [stateTotRange, setStateTotRange] = useState();
   const { selectedState, setSelectedState } = useContext(DataContext);
@@ -40,10 +40,9 @@ const Map = ({ mapDimensions }) => {
 
       const svg = select(svgRef.current);
       svg
-        .attr('viewBox', `0 0 618 380`)
-        .attr('preserveAspectRatio', 'xMaxYMax meet')
-        .attr('width', '100%')
-        .attr('height', '100%');
+        .attr('viewBox', `-60 0 750 370`)
+        // .attr('viewBox', `0 0 618 380`)
+        .classed('svg-content', true);
 
       const usStates = svg
         .selectAll('path')
@@ -140,10 +139,10 @@ const Map = ({ mapDimensions }) => {
         }
       });
     }
-  }, [mapDimensions, stateTotData, selectedState]);
-  if (mapDimensions && stateTotData) {
+  }, [stateTotData, selectedState]);
+  if (stateTotData) {
     return (
-      <div style={{ height: '100%' }}>
+      <section className='map-wrapper'>
         <div>
           <h2>Collisions by state</h2>
           <p className='instructions'>
@@ -151,15 +150,7 @@ const Map = ({ mapDimensions }) => {
           </p>
         </div>
         <div className='map-content'>
-          <div
-            style={{
-              width: mapDimensions.width * 0.95,
-              height: mapDimensions.width * 0.95 * 0.62,
-              margin: '0 auto',
-            }}
-          >
-            <UsMap ref={svgRef} />
-          </div>
+          <UsMap ref={svgRef} />
           {stateTotRange && (
             <div className='legend legend-map'>
               <p>{stateTotRange[0]}</p>
@@ -168,7 +159,7 @@ const Map = ({ mapDimensions }) => {
             </div>
           )}
         </div>
-      </div>
+      </section>
     );
   }
   return null;
