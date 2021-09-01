@@ -88,6 +88,44 @@ body {
   height: 35%;
 }
 
+/* US and State LABELS in Chart & Stats titles */
+
+.title-labels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-labels h3 {
+  margin-top: 0;
+  display: inline-block;
+  border-bottom: 4px solid var(--background);
+}
+
+.chart-wrapper .title-labels h3 {
+  margin-bottom: 0;
+}
+
+/* to indicate clickability in Stats */
+.stats-wrapper .title-labels h3:hover {
+  cursor: pointer;
+}
+
+.title-labels h3:first-child {
+  color: var(--primary-color);
+}
+
+.title-labels h3:last-child {
+  color: var(--highlight-color);
+}
+
+.title-labels h3:first-child.label-selected-us {
+  border-bottom: 4px solid var(--primary-color);
+}
+
+.title-labels h3:last-child.label-selected-state {
+  border-bottom: 4px solid var(--highlight-color);
+}
+
 /* HEADER */
 
 .header-wrapper {
@@ -174,22 +212,6 @@ path.selected-state {
 
 /* CHART */
 
-.legend-chart {
-  justify-content: space-between;
-  padding-right: 35px;
-}
-
-.legend-chart p {
-  margin: 0;
-}
-
-.legend-us p,
-.legend-state .chart-selected p {
-  font-size: 1.15rem;
-  font-weight: bold;
-  margin: 0;
-}
-
 .chart-selected {
   margin-right: 0;
 }
@@ -274,37 +296,6 @@ g.state-year:hover text {
 /* */
 
 /* STATS */
-
-.stats-title {
-  display: flex;
-  justify-content: space-between;
-}
-
-.stats-title h3 {
-  margin-top: 0;
-  display: inline-block;
-  border-bottom: 4px solid var(--background);
-}
-
-.stats-title h3:hover {
-  cursor: pointer;
-}
-
-.stats-title h3:first-child {
-  color: var(--primary-color);
-}
-
-.stats-title h3:last-child {
-  color: var(--highlight-color);
-}
-
-.stats-title h3:first-child.stats-selected-us {
-  border-bottom: 4px solid var(--primary-color);
-}
-
-.stats-title h3:last-child.stats-selected-state {
-  border-bottom: 4px solid var(--highlight-color);
-}
 
 .stats-range .subtitle {
   margin: 0;

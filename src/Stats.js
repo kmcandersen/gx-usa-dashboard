@@ -210,9 +210,9 @@ const Stats = () => {
   return (
     <section className='stats-wrapper'>
       <div>
-        <div className='stats-title'>
+        <div className='title-labels'>
           <h3
-            className={`${showUSData && `stats-selected-us`} ${
+            className={`${showUSData && selectedState && `label-selected-us`} ${
               !showUSData && `opacity-50`
             }`}
             onClick={() => setShowUSData(!showUSData)}
@@ -220,7 +220,7 @@ const Stats = () => {
             United States
           </h3>
           <h3
-            className={`${!showUSData && `stats-selected-state`} ${
+            className={`${!showUSData && `label-selected-state`} ${
               showUSData && `opacity-50`
             }`}
             onClick={() => setShowUSData(!showUSData)}

@@ -23,13 +23,15 @@ const Chart = () => {
 
   const svgRef = useRef();
   // top text div 135.91 + 19.92 h2 margin-top + 12.8 'hover' p margin-bottom
-  const topElementsHeight = 168.63;
+  // const topElementsHeight = 168.63;
+  // top text div 140.91 + 19.92 h2 margin-top + 12.8 'hover' p margin-bottom
+  const topElementsHeight = 173.63;
   // initial w/h from chart-wrapper
   const svgDimensions = {
     width: 555.5,
     height: 490 - topElementsHeight,
     margin: {
-      left: 25,
+      left: 35,
       right: 40,
       top: 0,
       bottom: 18,
@@ -64,6 +66,7 @@ const Chart = () => {
     } else {
       setShowUSData(true);
       setIsFirstStateSelected(true);
+      setFullSelectedState(null);
     }
   }, [selectedState]);
 
@@ -102,7 +105,7 @@ const Chart = () => {
             return 30;
           case maxTotInc > 100:
             return 20;
-          case maxTotInc > 30:
+          case maxTotInc > 20:
             return 5;
           case maxTotInc > 5:
             return 1;
@@ -263,17 +266,17 @@ const Chart = () => {
     <section className='chart-wrapper'>
       <div>
         <h2>Collisions by year</h2>
-        <div className='legend legend-chart'>
-          <div className='legend-us'>
-            <p>United States</p>
-          </div>
-          <div className='legend-state'>
-            {selectedState ? (
-              <p className='chart-selected'>{fullSelectedState}</p>
-            ) : (
-              <p className='subtitle'>Select a state on map</p>
-            )}
-          </div>
+        <div className='title-labels'>
+          <h3
+            className={`${showUSData && `title-labels`} ${
+              !showUSData && `opacity-50`
+            }`}
+          >
+            United States
+          </h3>
+          <h3 className={`${!showUSData && `label-selected-state`}`}>
+            {fullSelectedState}
+          </h3>
         </div>
 
         <div
