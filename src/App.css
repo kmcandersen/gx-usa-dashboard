@@ -45,6 +45,14 @@ body {
   color: var(--gray);
 }
 
+.opacity-50 {
+  opacity: 50%;
+}
+
+.letter-spacing {
+  letter-spacing: 1px;
+}
+
 .app-wrapper {
   height: 650px;
   width: 1100px;
@@ -274,6 +282,8 @@ g.state-year:hover text {
 
 .stats-title h3 {
   margin-top: 0;
+  display: inline-block;
+  border-bottom: 4px solid var(--background);
 }
 
 .stats-title h3:hover {
@@ -288,13 +298,11 @@ g.state-year:hover text {
   color: var(--highlight-color);
 }
 
-.stats-selected-us {
-  display: inline-block;
+.stats-title h3:first-child.stats-selected-us {
   border-bottom: 4px solid var(--primary-color);
 }
 
-.stats-selected-state {
-  display: inline-block;
+.stats-title h3:last-child.stats-selected-state {
   border-bottom: 4px solid var(--highlight-color);
 }
 
