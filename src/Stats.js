@@ -5,7 +5,7 @@ import DataContext from './context/DataContext';
 import './App.css';
 
 const Stats = () => {
-  const { usData2, stateYrData, selectedState, gxCount } =
+  const { usData, stateYrData, selectedState, gxCount } =
     useContext(DataContext);
   const [fullSelectedState, setFullSelectedState] = useState();
   const [usDataByCategory, setUsDataByCategory] = useState();
@@ -84,10 +84,10 @@ const Stats = () => {
 
   // US always available, in addition to any selected state
   useEffect(() => {
-    if (usData2) {
-      setUsDataByCategory(sumDataByYear(usData2));
+    if (usData) {
+      setUsDataByCategory(sumDataByYear(usData));
     }
-  }, [usData2]);
+  }, [usData]);
 
   useEffect(() => {
     if (stateYrData) {
@@ -123,7 +123,7 @@ const Stats = () => {
     const pieGenerator = pie();
 
     // use US OR selectedState data for pie chart
-    if (usData2 && usDataByCategory) {
+    if (usData && usDataByCategory) {
       const usPieChartData = getPieChartData(usDataByCategory);
       const statePieChartData = stateDataByCategory
         ? getPieChartData(stateDataByCategory)

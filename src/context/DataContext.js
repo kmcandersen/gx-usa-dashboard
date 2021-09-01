@@ -1,65 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { csv } from 'd3';
-import usDataCsv from './../assets/inctotus_16_20.csv';
-import stDataCsv from './../assets/incbystate_16_20.csv';
+import yrDataCsv from './../assets/incbystate_16_20.csv';
 import stTotIncCsv from './../assets/inctotbystate_16_20.csv';
 import gxCountCsv from './../assets/gxsumstateus.csv';
 
 const DataContext = React.createContext();
 
 export const DataProvider = ({ children }) => {
+  const [yrDataAll, setYrDataAll] = useState();
   const [usData, setUSData] = useState();
-  const [usData2, setUSData2] = useState();
-  const [stateYrDataAll, setStateYrDataAll] = useState();
   const [stateYrData, setStateYrData] = useState();
-  const [stateTotData, setStateTotData] = useState();
+  const [stateTotIncData, setStateTotIncData] = useState();
   const [selectedState, setSelectedState] = useState();
   const [gxCount, setGxCount] = useState();
   const [error, setError] = useState(null);
 
-  // for Chart
-  const getUsData = async () => {
+  // data for all categories, for indiv years, by state + 'US'
+  const getYrDataAll = async () => {
     try {
       setError(null);
-      const dataset = await csv(usDataCsv);
+      const dataset = await csv(yrDataCsv);
       dataset.forEach((d) => {
-        for (const item in d) {
-          d[item] = +d[item];
-        }
-      });
-      setUSData(dataset);
-    } catch (error) {
-      setError(error.toString());
-    }
-  };
-
-  // for Stats
-  const getUsData2 = async () => {
-    try {
-      setError(null);
-      const dataset = await csv(stDataCsv);
-      const datasetUS = dataset.filter((el) => el.STATE === 'US');
-      datasetUS.forEach((d) => {
-        d.VEHAUTO = +d.VEHAUTO;
-        d.VEHPED = +d.VEHPED;
-        d.VEHTRUCK = +d.VEHTRUCK;
-        d.VEHOTHER = +d.VEHOTHER;
-        d.TOTINC = +d.TOTINC;
-        d.TOTINJ = +d.TOTINJ;
-        d.TOTKLD = +d.TOTKLD;
-      });
-      setUSData2(datasetUS);
-    } catch (error) {
-      setError(error.toString());
-    }
-  };
-
-  const getStateYrDataAll = async () => {
-    try {
-      setError(null);
-      const dataset = await csv(stDataCsv);
-      dataset.forEach((d) => {
-        d.YEAR = +d.YEAR;
+        // d.YEAR = +d.YEAR;
         d.VEHAUTO = +d.VEHAUTO;
         d.VEHPED = +d.VEHPED;
         d.VEHTRUCK = +d.VEHTRUCK;
@@ -69,21 +31,28 @@ export const DataProvider = ({ children }) => {
         d.TOTKLD = +d.TOTKLD;
       });
 
-      setStateYrDataAll(dataset);
+      setYrDataAll(dataset);
     } catch (error) {
       setError(error.toString());
     }
   };
 
+  // put data for US only, for indiv years, in global state
+  const getUsData = () => {
+    const datasetUS = yrDataAll.filter((el) => el.STATE === 'US');
+    setUSData(datasetUS);
+  };
+
+  // put data for selected state only, for indiv years, in global state
   const getStateYrData = (selectedState = 'US') => {
-    const singleStateData = stateYrDataAll.filter(
+    const singleStateData = yrDataAll.filter(
       (el) => el.STATE === selectedState
     );
     setStateYrData(singleStateData);
   };
 
-  // for Map
-  const getStateTotData = async () => {
+  // incidents aggregated by state for all years, for Map
+  const getStateTotIncData = async () => {
     try {
       setError(null);
       const dataset = await csv(stTotIncCsv);
@@ -91,13 +60,13 @@ export const DataProvider = ({ children }) => {
       dataset.forEach((d) => {
         d.TOTINC = +d.TOTINC;
       });
-      setStateTotData(dataset);
+      setStateTotIncData(dataset);
     } catch (error) {
       setError(error.toString());
     }
   };
 
-  // load full set 1x, doesn't change
+  // gx count by state, for Stats
   const getGxData = async () => {
     try {
       setError(null);
@@ -112,15 +81,19 @@ export const DataProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getUsData();
-    getStateTotData();
-    getStateYrDataAll();
-    getUsData2();
+    getYrDataAll();
+    getStateTotIncData();
     getGxData();
   }, []);
 
   useEffect(() => {
-    if (stateYrDataAll) {
+    if (yrDataAll) {
+      getUsData();
+    }
+  }, [yrDataAll]);
+
+  useEffect(() => {
+    if (yrDataAll) {
       if (selectedState) {
         getStateYrData(selectedState);
       } else {
@@ -133,9 +106,8 @@ export const DataProvider = ({ children }) => {
     <DataContext.Provider
       value={{
         usData,
-        usData2,
         stateYrData,
-        stateTotData,
+        stateTotIncData,
         selectedState,
         gxCount,
         setSelectedState,

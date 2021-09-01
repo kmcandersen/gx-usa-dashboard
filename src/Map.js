@@ -5,7 +5,7 @@ import { ReactComponent as UsMap } from './assets/us_states_map.svg';
 import './App.css';
 
 const Map = () => {
-  const { stateTotData } = useContext(DataContext);
+  const { stateTotIncData } = useContext(DataContext);
   const [stateTotRange, setStateTotRange] = useState();
   const { selectedState, setSelectedState } = useContext(DataContext);
 
@@ -24,17 +24,17 @@ const Map = () => {
   };
 
   useEffect(() => {
-    if (stateTotData) {
-      setStateTotRange(findExtent(stateTotData, 'TOTINC'));
+    if (stateTotIncData) {
+      setStateTotRange(findExtent(stateTotIncData, 'TOTINC'));
     }
-  }, [stateTotData]);
+  }, [stateTotIncData]);
 
   useEffect(() => {
-    if (stateTotData) {
+    if (stateTotIncData) {
       const metricAccessor = (d) => d.TOTINC;
 
       const colorScale = scaleSequentialPow()
-        .domain([0, max(stateTotData, metricAccessor)])
+        .domain([0, max(stateTotIncData, metricAccessor)])
         .range(['#00d4ff', '#090979'])
         .exponent(0.3);
 
@@ -46,7 +46,7 @@ const Map = () => {
 
       const usStates = svg
         .selectAll('path')
-        .data(stateTotData)
+        .data(stateTotIncData)
         .join('path.border')
         .attr('data-value', metricAccessor)
         .attr('fill', (d) => {
@@ -142,8 +142,8 @@ const Map = () => {
         }
       });
     }
-  }, [stateTotData, selectedState]);
-  if (stateTotData) {
+  }, [stateTotIncData, selectedState]);
+  if (stateTotIncData) {
     return (
       <section className='map-wrapper'>
         <div>
