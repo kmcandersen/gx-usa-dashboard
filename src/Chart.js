@@ -13,7 +13,7 @@ import { ReactComponent as EmptySquare } from './assets/square.svg';
 import { ReactComponent as CheckedSquare } from './assets/check-square.svg';
 import statesList from './assets/state_names.js';
 import DataContext from './context/DataContext';
-import './App.css';
+// import './App.css';
 
 const Chart = () => {
   const { usData, stateYrData, selectedState } = useContext(DataContext);
@@ -270,11 +270,16 @@ const Chart = () => {
           <h3
             className={`${showUSData && `title-labels`} ${
               !showUSData && `opacity-50`
-            }`}
+            } stateface stateface-us`}
           >
             United States
           </h3>
-          <h3 className={`${!showUSData && `label-selected-state`}`}>
+          <h3
+            className={`${!showUSData && `label-selected-state`} ${
+              selectedState &&
+              `stateface stateface-${selectedState.toLowerCase()}`
+            }`}
+          >
             {fullSelectedState}
           </h3>
         </div>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { arc, format, pie, select } from 'd3';
 import statesList from './assets/state_names.js';
 import DataContext from './context/DataContext';
-import './App.css';
+// import './App.css';
 
 const Stats = () => {
   const { usData, stateYrData, selectedState, gxCount } =
@@ -214,7 +214,7 @@ const Stats = () => {
           <h3
             className={`${showUSData && selectedState && `label-selected-us`} ${
               !showUSData && `opacity-50`
-            }`}
+            } stateface stateface-us`}
             onClick={() => setShowUSData(!showUSData)}
           >
             United States
@@ -222,6 +222,9 @@ const Stats = () => {
           <h3
             className={`${!showUSData && `label-selected-state`} ${
               showUSData && `opacity-50`
+            } ${
+              selectedState &&
+              `stateface stateface-${selectedState.toLowerCase()}`
             }`}
             onClick={() => setShowUSData(!showUSData)}
           >

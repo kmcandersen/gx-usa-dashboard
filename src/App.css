@@ -1,5 +1,18 @@
 @import url(//fonts.googleapis.com/css?family=Work+Sans:400,700);
 
+@font-face {
+  font-family: 'StateFaceRegular';
+  src: url('./assets/fonts/stateface-regular-webfont.eot');
+  src: url('./assets/fonts/stateface-regular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/stateface-regular-webfont.woff') format('woff'),
+    url('./assets/fonts/stateface-regular-webfont.ttf') format('truetype'),
+    url('./assets/fonts/stateface-regular-webfont.svg#StateFaceRegular')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary-color: #005e95;
   --highlight-color: orange;
