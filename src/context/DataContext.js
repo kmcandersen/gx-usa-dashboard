@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { csv } from 'd3';
-import yrDataCsv from './../assets/incbystate_16_20.csv';
-import stTotIncCsv from './../assets/inctotbystate_16_20.csv';
+import yrDataCsv from './../assets/incbystate_00_20.csv';
+import stTotIncCsv from './../assets/inctotbystate_00_20.csv';
 import gxCountCsv from './../assets/gxsumstateus.csv';
 
 const DataContext = React.createContext();
@@ -30,7 +30,6 @@ export const DataProvider = ({ children }) => {
         d.TOTINJ = +d.TOTINJ;
         d.TOTKLD = +d.TOTKLD;
       });
-
       setYrDataAll(dataset);
     } catch (error) {
       setError(error.toString());

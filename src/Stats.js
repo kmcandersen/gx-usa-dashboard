@@ -232,7 +232,7 @@ const Stats = () => {
           </h3>
         </div>
         <div className='stats-range'>
-          <p className='subtitle letter-spacing'>2016-2020</p>
+          <p className='subtitle letter-spacing'>2000-2020</p>
         </div>
       </div>
       <div
