@@ -14,15 +14,18 @@
 }
 
 :root {
-  --primary-color: #005e95;
-  --highlight-color: orange;
   --background: #fff;
-  --gray: #808080;
   --dark-color: #000;
   --auto: #f9d054;
-  --truck: #2676d3;
-  --ped-bike: #ec564c;
-  --other: #abc549;
+  --truck: #f57b56;
+  --ped-bike: #abc549;
+  --other: #85a05f;
+  --dark: #0c0c0c;
+  --medium: #6d6c6c;
+  --mediumLight: #888;
+  --light: #b8b5b5;
+  --us-color: #0d4eb1;
+  --state-color: #f9aa33;
 }
 
 * {
@@ -39,7 +42,7 @@ body {
   justify-content: center;
   align-items: center;
   font-family: Work Sans;
-  color: var(--primary-color);
+  color: var(--dark);
 }
 
 #root {
@@ -50,12 +53,12 @@ body {
 .instructions {
   font-size: 0.8rem;
   font-style: italic;
-  color: var(--gray);
+  color: var(--medium);
   margin-top: 0;
 }
 
 .subtitle {
-  color: var(--gray);
+  color: var(--medium);
 }
 
 .opacity-50 {
@@ -71,7 +74,6 @@ body {
   width: 1100px;
   padding: 50px;
   display: flex;
-  /* border: 0.25px solid red; */
 }
 .col-left {
   width: 55%;
@@ -124,19 +126,19 @@ body {
 }
 
 .title-labels h3:first-child {
-  color: var(--primary-color);
+  color: var(--us-color);
 }
 
 .title-labels h3:last-child {
-  color: var(--highlight-color);
+  color: var(--state-color);
 }
 
 .title-labels h3:first-child.label-selected-us {
-  border-bottom: 4px solid var(--primary-color);
+  border-bottom: 4px solid var(--us-color);
 }
 
 .title-labels h3:last-child.label-selected-state {
-  border-bottom: 4px solid var(--highlight-color);
+  border-bottom: 4px solid var(--state-color);
 }
 
 /* HEADER */
@@ -145,12 +147,41 @@ body {
   height: 160px;
 }
 
-.header-logo {
-  display: flex;
+.header-title-group {
+  position: relative;
+  bottom: 15px;
 }
 
-.header-name {
-  text-transform: uppercase;
+.header-title-logo {
+  display: flex;
+  align-items: baseline;
+  font-weight: bold;
+}
+
+.header-title {
+  font-size: 3.8rem;
+  color: var(--mediumLight);
+  margin: 0;
+}
+
+.header-year {
+  color: var(--light);
+  font-size: 2rem;
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.header-desc {
+  margin-top: 7px;
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+}
+
+.header-desc a {
+  color: var(--mediumLight);
 }
 
 /* MAP */
@@ -178,11 +209,11 @@ path.border {
 }
 
 path.selected-state {
-  fill: var(--highlight-color);
+  fill: var(--state-color);
 }
 
 #state-tooltip rect {
-  stroke: var(--gray);
+  stroke: var(--medium);
   stroke-width: 0.5;
   fill: var(--background);
 }
@@ -234,17 +265,18 @@ path.selected-state {
   align-items: center;
   height: 42px;
   padding-top: 10px;
+  color: var(--dark);
 }
 
 #show-us-line-toggle svg {
   width: 20px;
   height: 20px;
-  fill: var(--primary-color);
+  fill: var(--medium);
   margin-right: 8px;
 }
 
 p.chart-selected {
-  color: var(--highlight-color);
+  color: var(--state-color);
 }
 
 g.tick > line {
@@ -258,17 +290,17 @@ path.domain {
 
 path.us-line {
   fill: none;
-  stroke: var(--primary-color);
+  stroke: var(--us-color);
   stroke-width: 4;
 }
 
 g.us-year circle {
-  fill: var(--primary-color);
+  fill: var(--us-color);
 }
 
 /* tooltip */
 g.us-year rect {
-  fill: var(--primary-color);
+  fill: var(--us-color);
   opacity: 0;
   transition: opacity 0.25s;
 }
@@ -285,17 +317,17 @@ g.state-year text {
 
 path.state-line {
   fill: none;
-  stroke: var(--highlight-color);
+  stroke: var(--state-color);
   stroke-width: 4;
 }
 
 g.state-year circle {
-  fill: var(--highlight-color);
+  fill: var(--state-color);
 }
 
 /* tooltip */
 g.state-year rect {
-  fill: var(--highlight-color);
+  fill: var(--state-color);
   opacity: 0;
   transition: opacity 0.25s;
 }
@@ -330,11 +362,13 @@ g.state-year:hover text {
   /* margin-top: 0; */
   font-size: 1.2rem;
   font-weight: bold;
+  color: var(--mediumLight);
 }
 
 .stats-text div p:first-child {
   margin-top: 12px;
   margin-bottom: 2px;
+  color: var(--dark);
 }
 
 .stats-text div p:last-child {
@@ -342,7 +376,7 @@ g.state-year:hover text {
 }
 
 #pie-tooltip rect {
-  fill: var(--primary-color);
+  fill: var(--medium);
 }
 #pie-tooltip text {
   text-anchor: middle;
@@ -361,10 +395,12 @@ g.state-year:hover text {
 .stats-pie-legend-title {
   font-weight: bold;
   margin-top: 0;
+  color: var(--dark);
 }
 
 .stats-pie-legend-text {
   font-size: 0.8rem;
+  color: var(--dark);
 }
 
 .stats-pie-legend span:not(.sm-sp) {
