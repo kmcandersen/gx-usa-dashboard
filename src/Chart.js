@@ -3,7 +3,6 @@ import {
   axisBottom,
   axisLeft,
   extent,
-  format,
   line,
   max,
   scaleLinear,
@@ -22,19 +21,18 @@ const Chart = () => {
   const [isFirstStateSelected, setIsFirstStateSelected] = useState(true);
 
   const svgRef = useRef();
-  // top text div 135.91 + 19.92 h2 margin-top + 12.8 'hover' p margin-bottom
-  // const topElementsHeight = 168.63;
-  // top text div 140.91 + 19.92 h2 margin-top + 12.8 'hover' p margin-bottom
+
+  // top text div 130.91 + 29.92 h2 margin-top + 12.8 'hover' p margin-bottom
   const topElementsHeight = 173.63;
   // initial w/h from chart-wrapper
   const svgDimensions = {
     width: 555.5,
     height: 490 - topElementsHeight,
     margin: {
-      left: 35,
+      left: 40,
       right: 40,
       top: 0,
-      bottom: 18,
+      bottom: 19,
     },
   };
 
@@ -124,16 +122,17 @@ const Chart = () => {
       let yScale = scaleLinear()
         // + space so line not at top of chart
         .domain([0, max(datasetForYScale, yAccessor) + addToYDomain])
-        .range([boundedDimensions.height - 10, 20])
+        .range([boundedDimensions.height - 5, 20])
         .nice();
 
       const xAxisGenerator = axisBottom()
         .scale(xScale)
-        .ticks(usData.length)
+        .ticks(usData.length / 2)
         .tickSizeInner(-boundedDimensions.height + 10)
         .tickSizeOuter(0)
         .tickPadding(10)
-        .tickFormat(format('d'));
+        .tickFormat((d) => String(d).slice(2));
+
       select('.x-axis')
         .call(xAxisGenerator)
         .style(
@@ -141,12 +140,10 @@ const Chart = () => {
           `translate(${svgDimensions.margin.left}px, ${boundedDimensions.height}px`
         );
 
-      const yAxisGenerator = axisLeft()
-        .scale(yScale)
-        .ticks(yTicksQty)
-        .tickSizeInner(-boundedDimensions.width - 10)
-        .tickSizeOuter(0)
-        .tickPadding(10);
+      const yAxisGenerator = axisLeft().scale(yScale).ticks(yTicksQty);
+      // .tickSizeInner(-boundedDimensions.width - 10)
+      // .tickSizeOuter(0)
+      // .tickPadding(10);
       select('.y-axis')
         .call(yAxisGenerator)
         .style('transform', `translate(${svgDimensions.margin.left}px, -10px)`);
@@ -186,13 +183,13 @@ const Chart = () => {
           .attr('cy', (d) => yScale(yAccessor(d)))
           .attr('r', 0)
           .transition()
-          .attr('r', 5);
+          .attr('r', 4);
 
         usYears
           .append('rect')
-          .attr('x', (d) => xScale(xAccessor(d)) - 30)
+          .attr('x', (d) => xScale(xAccessor(d)) - 25)
           .attr('y', (d) => yScale(yAccessor(d)) - 35)
-          .attr('width', 60)
+          .attr('width', 50)
           .attr('height', 25)
           .attr('fill', 'blue');
 
@@ -240,7 +237,7 @@ const Chart = () => {
           .attr('cy', (d) => yScale(yAccessor(d)))
           .attr('r', 0)
           .transition()
-          .attr('r', 5);
+          .attr('r', 4);
 
         stateYear
           .append('rect')

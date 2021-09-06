@@ -256,15 +256,18 @@ path.selected-state {
 
 /* CHART */
 
-.chart-selected {
-  margin-right: 0;
+.chart-wrapper h2 {
+  margin-top: 29.92px;
+}
+
+.chart-wrapper .title-labels h3 {
+  margin-right: 20px;
 }
 
 #show-us-line-toggle {
   display: flex;
   align-items: center;
   height: 42px;
-  padding-top: 10px;
   color: var(--dark);
 }
 
@@ -272,26 +275,45 @@ path.selected-state {
   width: 20px;
   height: 20px;
   fill: var(--medium);
-  margin-right: 8px;
+  margin: 6px 8px 0 0;
 }
 
-p.chart-selected {
-  color: var(--state-color);
+#show-us-line-toggle p {
+  margin-bottom: 8px;
+}
+
+.x-axis text {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--medium);
+}
+
+.y-axis text {
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+  color: var(--medium);
 }
 
 g.tick > line {
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke-dasharray: 2 8;
+  color: var(--mediumLight);
 }
+
+.y-axis g.tick > line {
+  stroke: none;
+}
+
 /* axes lines */
 path.domain {
   stroke-width: 1.5px;
+  color: var(--medium);
 }
 
 path.us-line {
   fill: none;
   stroke: var(--us-color);
-  stroke-width: 4;
+  stroke-width: 3;
 }
 
 g.us-year circle {
@@ -318,7 +340,7 @@ g.state-year text {
 path.state-line {
   fill: none;
   stroke: var(--state-color);
-  stroke-width: 4;
+  stroke-width: 3;
 }
 
 g.state-year circle {
@@ -359,7 +381,6 @@ g.state-year:hover text {
 }
 
 .stats-text div > p:nth-child(2) {
-  /* margin-top: 0; */
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--mediumLight);
@@ -381,8 +402,7 @@ g.state-year:hover text {
 #pie-tooltip text {
   text-anchor: middle;
   dominant-baseline: middle;
-  /* color: var(--background); */
-  fill: #fff;
+  fill: var(--background);
 }
 
 .stats-pie-legend {
