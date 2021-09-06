@@ -159,29 +159,37 @@ body {
 }
 
 .header-title {
-  font-size: 3.8rem;
+  font-size: 3rem;
   color: var(--mediumLight);
-  margin: 0;
+  margin: 0 0 0 1px;
 }
 
 .header-year {
   color: var(--light);
-  font-size: 2rem;
+  font-size: 2.35rem;
 }
 
 .header-subtitle {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.52rem;
 }
 
-.header-desc {
+.header-desc p {
   margin-top: 7px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1.2rem;
 }
 
 .header-desc a {
   color: var(--mediumLight);
+}
+
+.header-desc p:first-child {
+  margin-bottom: 3px;
+}
+.header-desc p:last-child {
+  margin-top: 0;
+  font-size: 0.8rem;
 }
 
 /* MAP */
