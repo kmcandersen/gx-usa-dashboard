@@ -2,14 +2,29 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { max, scaleSequentialPow, select } from 'd3';
 import DataContext from './context/DataContext';
 import { ReactComponent as UsMap } from './assets/us_states_map.svg';
-import './App.css';
+import { ReactComponent as MagPlus } from './assets/mag-plus.svg';
+import { ReactComponent as MagMinus } from './assets/mag-minus.svg';
 
 const Map = () => {
   const { stateTotIncData } = useContext(DataContext);
   const [stateTotRange, setStateTotRange] = useState();
+  const [isZoomed, setIsZoomed] = useState(false);
   const { selectedState, setSelectedState } = useContext(DataContext);
 
   const svgRef = useRef();
+
+  const wrapperWidth = 454.5;
+  const mapMargins = {
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
+  };
+
+  let boundedDimensions = {
+    height: 278.58 - 39 - mapMargins.top - mapMargins.bottom,
+    width: wrapperWidth - mapMargins.left - mapMargins.right,
+  };
 
   const findExtent = (arr, prop) => {
     var lowest = 0;
@@ -39,10 +54,28 @@ const Map = () => {
         .exponent(0.3);
 
       const svg = select(svgRef.current);
-      svg
-        .attr('viewBox', `-60 0 750 370`)
-        // .attr('viewBox', `0 0 618 380`)
-        .classed('svg-content', true);
+      const zoomArea = svg.select('#zoom-area');
+
+      if (!isZoomed) {
+        // viewBox="-56.485 -10 760.375 384.265"
+        svg.attr(
+          'viewBox',
+          `-${boundedDimensions.width * 0.13} -10 ${
+            boundedDimensions.width * 1.75
+          } ${boundedDimensions.height * 1.75}`
+        );
+        zoomArea
+          .attr('x', 330)
+          .attr('y', 8)
+          .attr('width', 290)
+          .attr('height', 170)
+          .classed('zoomed-out', true);
+      } else {
+        // svg same w, h dimensions as orig (454.5 x 229.67); orig/2.341 = zoom
+        // outline only shows when zoomed out
+        svg.attr('viewBox', `325 15 324.86 164.172`);
+        zoomArea.classed('zoomed-out', false);
+      }
 
       const usStates = svg
         .selectAll('path')
@@ -59,7 +92,7 @@ const Map = () => {
         let selectedStateEl = document.querySelector(`#${selectedState}`);
 
         //if empty area clicked (e.target.tagName === 'svg' conflicts with click on svg check icons in Chart)
-        if (e.target.id === 'us-map') {
+        if (e.target.id === 'us-map' || e.target.id === 'zoom-area') {
           if (selectedState) {
             selectedStateEl.classList.remove('selected-state');
             setSelectedState(null);
@@ -111,38 +144,66 @@ const Map = () => {
           const bbCtr = getBoundingBoxCenter(hoveredState);
           const stateTooltip = svg.append('g').attr('id', 'state-tooltip');
 
-          stateTooltip
+          const stateTooltipRect = stateTooltip
             .append('rect')
-            .attr('x', bbCtr[0] - 35)
-            .attr('y', bbCtr[1] - 12.5)
-            // same h as pie tooltip; + 1 for stroke
-            .attr('width', 71)
-            .attr('height', 26)
             // needed in click handler
-            .attr('class', hoveredState.id)
-            .style('opacity', 0)
-            .transition()
-            .duration(250)
-            .style('opacity', 1);
-          stateTooltip
+            .attr('class', hoveredState.id);
+
+          const stateTooltipText = stateTooltip
             .append('text')
-            .attr('x', bbCtr[0])
-            .attr('y', bbCtr[1] + 2)
             // needed in click handler
             .attr('class', hoveredState.id)
+            .attr('x', bbCtr[0])
             .text(
               `${hoveredState.id}: ${Number(
                 hoveredState.dataset.value
               ).toLocaleString()}`
-            )
-            .style('opacity', 0)
-            .transition()
-            .duration(250)
-            .style('opacity', 1);
+            );
+
+          if (!isZoomed) {
+            // 2 sizes here so zoomed tooltips aren't huge
+            // tooltip transitions specified here to avoid rendering issue
+            stateTooltipRect
+              .attr('x', bbCtr[0] - 38)
+              .attr('y', bbCtr[1] - 12.5)
+              // same h as pie tooltip; + 1 for stroke
+              .attr('width', 76)
+              .attr('height', 26)
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+            stateTooltipText
+              .attr('y', bbCtr[1] + 2)
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+          } else {
+            // orig/2.341 = zoom (same as viewBox)
+            stateTooltipRect
+              .attr('x', bbCtr[0] - 16.235)
+              .attr('y', bbCtr[1] - 5.554)
+              .attr('width', 32.467)
+              .attr('height', 11.108)
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+
+            stateTooltipText
+              .attr('y', bbCtr[1] + 1)
+              .attr('font-size', '0.427rem')
+              .style('opacity', 0)
+              .transition()
+              .duration(250)
+              .style('opacity', 1);
+          }
         }
       });
     }
-  }, [stateTotIncData, selectedState]);
+  }, [stateTotIncData, selectedState, isZoomed]);
+
   if (stateTotIncData) {
     return (
       <section className='map-wrapper'>
@@ -152,13 +213,31 @@ const Map = () => {
             Hover on a state to view totals; click to show details
           </p>
         </div>
+
         <div className='map-content'>
           <UsMap ref={svgRef} />
+
           {stateTotRange && (
             <div className='legend legend-map'>
               <p>{stateTotRange[0]}</p>
               <div id='legend-bar'></div>
               <p>{stateTotRange[1].toLocaleString()}</p>
+            </div>
+          )}
+          {!isZoomed ? (
+            <div
+              id='zoom-control'
+              className='zoom-control-plus'
+              style={{ position: 'absolute', top: 82, right: 53 }}
+            >
+              <MagPlus onClick={() => setIsZoomed(true)} />
+            </div>
+          ) : (
+            <div
+              id='zoom-control'
+              style={{ position: 'absolute', top: 205, right: 60 }}
+            >
+              <MagMinus onClick={() => setIsZoomed(false)} />
             </div>
           )}
         </div>

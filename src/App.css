@@ -15,14 +15,13 @@
 
 :root {
   --background: #fff;
-  --dark-color: #000;
   --auto: #f9d054;
   --truck: #f57b56;
   --ped-bike: #abc549;
   --other: #85a05f;
   --dark: #0c0c0c;
   --medium: #6d6c6c;
-  --mediumLight: #888;
+  --medium-light: #888;
   --light: #b8b5b5;
   --us-color: #0d4eb1;
   --state-color: #f9aa33;
@@ -94,8 +93,11 @@ body {
 }
 
 .map-wrapper {
-  /* border: 0.25px solid red; */
   height: 55%;
+}
+
+.map-wrapper > * {
+  /* border: 0.25px solid red; */
 }
 
 .stats-wrapper {
@@ -160,7 +162,7 @@ body {
 
 .header-title {
   font-size: 3rem;
-  color: var(--mediumLight);
+  color: var(--medium-light);
   margin: 0 0 0 1px;
 }
 
@@ -181,7 +183,7 @@ body {
 }
 
 .header-desc a {
-  color: var(--mediumLight);
+  color: var(--medium-light);
 }
 
 .header-desc p:first-child {
@@ -195,7 +197,7 @@ body {
 /* MAP */
 
 .map-wrapper h2 {
-  margin-top: 0;
+  margin: 0 0 10px 0;
 }
 
 .map-wrapper p.instructions {
@@ -203,8 +205,7 @@ body {
 }
 
 .map-content {
-  /* subtract height of top items: 62.91 top div + 16 insts margin-bottom */
-  height: calc(100% - 78.91px);
+  position: relative;
 }
 
 svg#us-map:hover {
@@ -229,17 +230,44 @@ path.selected-state {
 #state-tooltip text {
   text-anchor: middle;
   dominant-baseline: middle;
-  fill: var(--dark-color);
+  fill: var(--dark);
+}
+
+#zoom-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  fill: none;
+}
+
+/* added/removed from #zoom-area */
+.zoomed-out {
+  stroke: var(--light);
+  stroke-width: 1.5px;
+  opacity: 50%;
+}
+
+/* addl styling inline */
+#zoom-control {
+  width: 25px;
+  height: 25px;
+  fill: var(--light);
+}
+
+#zoom-control svg:hover {
+  cursor: pointer;
+  fill: var(--medium-light);
 }
 
 .legend {
   display: flex;
   flex-direction: row;
+  color: var(--medium);
 }
 
 .legend-map {
   width: 90%;
-  margin: 0 auto;
+  margin: 10px 0 0 30px;
 }
 
 .legend-map p {
@@ -286,6 +314,10 @@ path.selected-state {
   margin: 6px 8px 0 0;
 }
 
+#show-us-line-toggle svg:hover {
+  fill: var(--dark);
+}
+
 #show-us-line-toggle p {
   margin-bottom: 8px;
 }
@@ -305,7 +337,7 @@ path.selected-state {
 g.tick > line {
   stroke-width: 2px;
   stroke-dasharray: 2 8;
-  color: var(--mediumLight);
+  color: var(--medium-light);
 }
 
 .y-axis g.tick > line {
@@ -391,7 +423,7 @@ g.state-year:hover text {
 .stats-text div > p:nth-child(2) {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--mediumLight);
+  color: var(--medium-light);
 }
 
 .stats-text div p:first-child {
