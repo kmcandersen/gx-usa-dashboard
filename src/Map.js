@@ -209,8 +209,8 @@ const Map = () => {
       <section className='map-wrapper'>
         <div>
           <h2>Collisions by state</h2>
-          <p className='instructions'>
-            Hover on a state to view totals; click to show details
+          <p className='instructions small-text'>
+            Hover on a state to view 2000-2020 totals; click to show details
           </p>
         </div>
 

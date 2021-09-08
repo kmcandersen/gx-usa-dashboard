@@ -25,6 +25,8 @@
   --light: #b8b5b5;
   --us-color: #0d4eb1;
   --state-color: #f9aa33;
+  --dropdown-primary: rgba(2, 163, 223, 1);
+  --dropdown-highlight: rgba(2, 163, 223, 0.25);
 }
 
 * {
@@ -44,6 +46,11 @@ body {
   color: var(--dark);
 }
 
+h2,
+h3 {
+  font-family: Work Sans;
+}
+
 #root {
   display: flex;
   align-items: center;
@@ -52,7 +59,6 @@ body {
 .instructions {
   font-size: 0.8rem;
   font-style: italic;
-  color: var(--medium);
   margin-top: 0;
 }
 
@@ -60,8 +66,9 @@ body {
   color: var(--medium);
 }
 
-.opacity-50 {
-  opacity: 50%;
+.small-text {
+  font-size: 0.8rem;
+  color: var(--medium);
 }
 
 .letter-spacing {
@@ -93,7 +100,7 @@ body {
 }
 
 .map-wrapper {
-  height: 55%;
+  height: 53%;
 }
 
 .map-wrapper > * {
@@ -102,7 +109,7 @@ body {
 
 .stats-wrapper {
   /* border: 0.25px solid red; */
-  height: 35%;
+  height: 37.5%;
 }
 
 /* US and State LABELS in Chart & Stats titles */
@@ -119,12 +126,20 @@ body {
 }
 
 .chart-wrapper .title-labels h3 {
-  margin-bottom: 0;
+  margin: 0 20px 0 0;
+}
+
+.stats-wrapper .title-labels h3 {
+  margin-bottom: 15px;
 }
 
 /* to indicate clickability in Stats */
 .stats-wrapper .title-labels h3:hover {
   cursor: pointer;
+}
+/* to indicate US label not clickable when no selectedState */
+.stats-wrapper .title-labels h3.no-pointer {
+  cursor: text;
 }
 
 .title-labels h3:first-child {
@@ -141,6 +156,23 @@ body {
 
 .title-labels h3:last-child.label-selected-state {
   border-bottom: 4px solid var(--state-color);
+}
+
+.stats-wrapper .title-labels h3:last-child:hover {
+  opacity: 1;
+}
+.stats-wrapper .title-labels h3:first-child:hover {
+  opacity: 1;
+}
+
+.inactive-label {
+  transition: opacity 0.25s;
+  opacity: 0.5;
+}
+
+/* to indicate clickability in Stats */
+.stats-wrapper .inactive-label:hover {
+  opacity: 1;
 }
 
 /* HEADER */
@@ -176,22 +208,18 @@ body {
   font-size: 1.52rem;
 }
 
-.header-desc p {
-  margin-top: 7px;
-  font-size: 0.95rem;
-  line-height: 1.2rem;
-}
-
 .header-desc a {
   color: var(--medium-light);
 }
 
 .header-desc p:first-child {
-  margin-bottom: 3px;
+  font-size: 0.95rem;
+  line-height: 1.2rem;
+  margin-top: 7px;
+  margin-bottom: 4px;
 }
 .header-desc p:last-child {
   margin-top: 0;
-  font-size: 0.8rem;
 }
 
 /* MAP */
@@ -244,10 +272,10 @@ path.selected-state {
 .zoomed-out {
   stroke: var(--light);
   stroke-width: 1.5px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
-/* addl styling inline */
+/* magnifying glass icons: addl styling inline */
 #zoom-control {
   width: 25px;
   height: 25px;
@@ -262,12 +290,11 @@ path.selected-state {
 .legend {
   display: flex;
   flex-direction: row;
-  color: var(--medium);
 }
 
 .legend-map {
   width: 90%;
-  margin: 10px 0 0 30px;
+  margin: 5px 0 0 30px;
 }
 
 .legend-map p {
@@ -294,10 +321,6 @@ path.selected-state {
 
 .chart-wrapper h2 {
   margin-top: 29.92px;
-}
-
-.chart-wrapper .title-labels h3 {
-  margin-right: 20px;
 }
 
 #show-us-line-toggle {
@@ -404,15 +427,11 @@ g.state-year:hover text {
 
 /* STATS */
 
-.stats-range .subtitle {
-  margin: 0;
-}
-
 .stats-content {
   display: flex;
 }
 
-/* .stats-content subsection widths (-text, -pie, -legend) defined in Stats.js */
+/* .stats-content subsection widths defined in Stats.js */
 
 .stats-text {
   display: flex;
@@ -434,6 +453,10 @@ g.state-year:hover text {
 
 .stats-text div p:last-child {
   margin: 0;
+}
+
+span#footnote {
+  font-weight: normal;
 }
 
 #pie-tooltip rect {
@@ -484,6 +507,29 @@ div.ped-bike span:not(.sm-sp) {
 
 div.other span {
   background-color: var(--other);
+}
+
+/* react-select dropdown component */
+
+.css-1pahdxg-control {
+  border-color: var(--dropdown-primary) !important;
+  box-shadow: 0 0 0 1px var(--dropdown-primary) !important;
+}
+
+.css-1pahdxg-control:hover {
+  border-color: var(--dropdown-primary) !important;
+}
+
+.css-9gakcf-option {
+  background-color: var(--dropdown-primary) !important;
+}
+
+.css-1n7v3ny-option {
+  background-color: var(--dropdown-highlight) !important;
+}
+
+.css-kojpdv-MenuList {
+  max-height: 160px !important;
 }
 
 /* @media only screen and (max-width: 600px) {

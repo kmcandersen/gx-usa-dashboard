@@ -266,7 +266,7 @@ const Chart = () => {
         <div className='title-labels'>
           <h3
             className={`${showUSData && `title-labels`} ${
-              !showUSData && `opacity-50`
+              !showUSData && `inactive-label`
             } stateface stateface-us`}
           >
             United States
@@ -298,7 +298,9 @@ const Chart = () => {
           ) : null}
         </div>
 
-        <p className='instructions'>Hover on a point to view totals</p>
+        <p className='instructions small-text'>
+          Hover on a point to view totals
+        </p>
       </div>
       <svg ref={svgRef}>
         <g className='x-axis' />

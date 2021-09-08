@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { arc, format, pie, select } from 'd3';
 import statesList from './assets/state_names.js';
+import yearOptions from './assets/year_options.js';
+import Select from 'react-select';
 import DataContext from './context/DataContext';
-// import './App.css';
 
 const Stats = () => {
   const { usData, stateYrData, selectedState, gxCount } =
     useContext(DataContext);
+  const [selectedYear, setSelectedYear] = useState('total');
   const [fullSelectedState, setFullSelectedState] = useState();
+  // single year OR total for US/state
   const [usDataByCategory, setUsDataByCategory] = useState();
   const [stateDataByCategory, setStateDataByCategory] = useState();
+
   const [showUSData, setShowUSData] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,6 +22,7 @@ const Stats = () => {
   // statsTitle 44.72 + statsRange 19
   const topElementsHeight = 63.72;
   const subSectionWidths = {
+    dropdown: '35%',
     statsText: '30%',
     pieChart: '46%',
     pieChartDec: 0.46,
@@ -73,6 +78,32 @@ const Stats = () => {
     return result;
   };
 
+  const getSelectedData = (state, year = 'total') => {
+    if (state === 'US') {
+      if (year === 'total') {
+        setUsDataByCategory(sumDataByYear(usData));
+      } else {
+        let result = usData.find((el) => el.YEAR === year);
+        let resultCalc = {
+          ...result,
+          TOTCAS: result.TOTKLD + result.TOTINJ,
+        };
+        setUsDataByCategory(resultCalc);
+      }
+    } else if (state !== 'US') {
+      if (year === 'total') {
+        setStateDataByCategory(sumDataByYear(stateYrData));
+      } else {
+        let result = stateYrData.find((el) => el.YEAR === year);
+        let resultCalc = {
+          ...result,
+          TOTCAS: result.TOTKLD + result.TOTINJ,
+        };
+        setStateDataByCategory(resultCalc);
+      }
+    }
+  };
+
   const getPieChartData = (obj) => {
     return {
       Auto: obj.VEHAUTO / obj.TOTINC,
@@ -82,20 +113,27 @@ const Stats = () => {
     };
   };
 
-  // US always available, in addition to any selected state
   useEffect(() => {
     if (usData) {
-      setUsDataByCategory(sumDataByYear(usData));
+      if (selectedYear !== 'total') {
+        getSelectedData('US', selectedYear);
+      } else {
+        setUsDataByCategory(sumDataByYear(usData));
+      }
     }
-  }, [usData]);
+  }, [usData, selectedYear]);
 
   useEffect(() => {
     if (stateYrData) {
-      setStateDataByCategory(sumDataByYear(stateYrData));
+      if (selectedYear !== 'total') {
+        getSelectedData(selectedState, selectedYear);
+      } else if (selectedYear === 'total') {
+        setStateDataByCategory(sumDataByYear(stateYrData));
+      }
     } else {
       setStateDataByCategory(null);
     }
-  }, [stateYrData]);
+  }, [stateYrData, selectedYear]);
 
   useEffect(() => {
     if (selectedState) {
@@ -195,7 +233,7 @@ const Stats = () => {
             .style(
               'transform',
               `translate(${svgDimensions.width / 2 + 15}px, ${
-                svgDimensions.height / 2 + 18
+                svgDimensions.height / 2 + 19
               }px`
             )
             .style('opacity', 0)
@@ -213,15 +251,17 @@ const Stats = () => {
         <div className='title-labels'>
           <h3
             className={`${showUSData && selectedState && `label-selected-us`} ${
-              !showUSData && `opacity-50`
-            } stateface stateface-us`}
-            onClick={() => setShowUSData(!showUSData)}
+              !showUSData && `inactive-label`
+            } ${!selectedState && `no-pointer`} stateface stateface-us`}
+            onClick={() => {
+              selectedState && setShowUSData(!showUSData);
+            }}
           >
             United States
           </h3>
           <h3
             className={`${!showUSData && `label-selected-state`} ${
-              showUSData && `opacity-50`
+              showUSData && `inactive-label`
             } ${
               selectedState &&
               `stateface stateface-${selectedState.toLowerCase()}`
@@ -231,8 +271,18 @@ const Stats = () => {
             {fullSelectedState}
           </h3>
         </div>
-        <div className='stats-range'>
-          <p className='subtitle letter-spacing'>2000-2020</p>
+        <div
+          className='stats-dropdown'
+          style={{
+            width: subSectionWidths.dropdown,
+          }}
+        >
+          <Select
+            defaultValue={selectedYear}
+            onChange={(e) => setSelectedYear(e.value)}
+            options={yearOptions}
+            placeholder='2000-2020'
+          />
         </div>
       </div>
       <div
@@ -260,7 +310,13 @@ const Stats = () => {
               {gxCount && (
                 <div>
                   <p>Grade crossings:</p>
-                  <p>{gxCount[50].GXCOUNT.toLocaleString()}</p>
+                  <p>
+                    {gxCount[51].GXCOUNT.toLocaleString()}
+                    <span id='footnote' className='small-text'>
+                      {' '}
+                      (2020)
+                    </span>
+                  </p>
                 </div>
               )}
             </>
@@ -282,6 +338,10 @@ const Stats = () => {
                   {gxCount
                     .find((el) => el.STATE === selectedState)
                     .GXCOUNT.toLocaleString()}
+                  <span id='footnote' className='small-text'>
+                    {' '}
+                    (2020)
+                  </span>
                 </p>
               </div>
             </>

@@ -24,7 +24,7 @@ const Header = () => {
           <p>
             Collisions at highway-rail at-grade crossings in the United States.
           </p>
-          <p>
+          <p className='small-text'>
             Source:{' '}
             <a href='https://safetydata.fra.dot.gov/'>
               Federal Railroad Administration
