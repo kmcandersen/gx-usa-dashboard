@@ -287,6 +287,7 @@ const Stats = () => {
             onChange={(e) => setSelectedYear(e.value)}
             options={yearOptions}
             placeholder='2000-2020'
+            captureMenuScroll={false}
           />
         </div>
       </div>

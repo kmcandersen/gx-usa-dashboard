@@ -518,7 +518,7 @@ div.other span {
   background-color: var(--dropdown-highlight) !important;
 }
 
-.css-kojpdv-MenuList {
+.css-26l3qy-menu > div:first-child {
   max-height: 160px !important;
 }
 
