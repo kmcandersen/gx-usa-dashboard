@@ -1,3 +1,4 @@
+// only seen if site loads on screen < 470px wide
 import React, { useEffect } from 'react';
 import { ReactComponent as RotateIcon } from './assets/rotate-device.svg';
 import { ReactComponent as Logo } from './assets/gx-sign.svg';
@@ -11,7 +12,7 @@ const Alert = () => {
   }, []);
 
   return (
-    <div className='message-overlay'>
+    <div className='rotate-message'>
       <div className='header-title-logo'>
         <Logo
           width={30}
