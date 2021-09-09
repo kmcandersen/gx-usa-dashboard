@@ -1,16 +1,9 @@
 // only seen if site loads on screen < 470px wide
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ReactComponent as RotateIcon } from './assets/rotate-device.svg';
 import { ReactComponent as Logo } from './assets/gx-sign.svg';
 
 const Alert = () => {
-  useEffect(() => {
-    let el = document.querySelector('.message-overlay');
-    if (el) {
-      el.classList.add('fade-in');
-    }
-  }, []);
-
   return (
     <div className='rotate-message'>
       <div className='header-title-logo'>

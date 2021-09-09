@@ -578,12 +578,6 @@ div.other span {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    transition: 2s opacity;
-  }
-
-  .fade-in {
-    opacity: 1;
   }
 
   .header-title-logo p {
