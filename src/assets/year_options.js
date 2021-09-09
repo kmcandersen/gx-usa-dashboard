@@ -1,4 +1,4 @@
-export default [
+const year_options = [
   { value: 'total', label: '2000-2020' },
   { value: '2019', label: '2019' },
   { value: '2018', label: '2018' },
@@ -21,3 +21,5 @@ export default [
   { value: '2001', label: '2001' },
   { value: '2000', label: '2000' },
 ];
+
+export default year_options;

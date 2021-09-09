@@ -8,18 +8,11 @@ import Chart from './Chart';
 import Stats from './Stats';
 
 const App = () => {
-  const { isSmScreen } = useContext(DataContext);
+  const { screenWidth } = useContext(DataContext);
 
   return (
     <main className='app-wrapper'>
-      {isSmScreen ? (
-        <>
-          <Header />
-          <Map />
-          <Chart />
-          <Stats />
-        </>
-      ) : (
+      {screenWidth === 'lg' ? (
         <>
           <div className='col-left'>
             <Header />
@@ -29,6 +22,13 @@ const App = () => {
             <Map />
             <Stats />
           </div>
+        </>
+      ) : (
+        <>
+          <Header />
+          <Map />
+          <Chart />
+          <Stats />
         </>
       )}
     </main>

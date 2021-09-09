@@ -15,27 +15,13 @@ import DataContext from './context/DataContext';
 // import './App.css';
 
 const Chart = () => {
-  const { usData, stateYrData, selectedState, isSmScreen } =
+  const { usData, stateYrData, selectedState, screenWidth } =
     useContext(DataContext);
   const [fullSelectedState, setFullSelectedState] = useState();
   const [showUSData, setShowUSData] = useState(true);
   const [isFirstStateSelected, setIsFirstStateSelected] = useState(true);
 
   const svgRef = useRef();
-
-  // top text div 130.91 + 29.92 h2 margin-top + 12.8 'hover' p margin-bottom
-  const topElementsHeight = 173.63;
-  // initial w/h from chart-wrapper
-  const svgDimensions = {
-    width: isSmScreen ? 460 : 555.5,
-    height: 490 - topElementsHeight,
-    margin: {
-      left: isSmScreen ? 30 : 40,
-      right: 40,
-      top: 0,
-      bottom: 19,
-    },
-  };
 
   const findMax = (arr, prop) => {
     var highest = 0;
@@ -67,10 +53,24 @@ const Chart = () => {
       setIsFirstStateSelected(true);
       setFullSelectedState(null);
     }
-  }, [selectedState]);
+  }, [selectedState, isFirstStateSelected]);
 
   useEffect(() => {
     if (usData) {
+      // top text div 130.91 + 29.92 h2 margin-top + 12.8 'hover' p margin-bottom
+      const topElementsHeight = 173.63;
+      // initial w/h from chart-wrapper
+      const svgDimensions = {
+        width: screenWidth !== 'lg' ? 460 : 555.5,
+        height: 490 - topElementsHeight,
+        margin: {
+          left: screenWidth !== 'lg' ? 30 : 40,
+          right: 40,
+          top: 0,
+          bottom: 19,
+        },
+      };
+
       let boundedDimensions = {
         height:
           svgDimensions.height -
@@ -258,7 +258,7 @@ const Chart = () => {
         svg.selectAll('g.state-year').remove();
       }
     }
-  }, [usData, stateYrData, selectedState, showUSData]);
+  }, [usData, stateYrData, selectedState, showUSData, screenWidth]);
 
   return (
     <section className='chart-wrapper'>

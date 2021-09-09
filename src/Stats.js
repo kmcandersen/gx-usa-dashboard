@@ -15,7 +15,6 @@ const Stats = () => {
   const [stateDataByCategory, setStateDataByCategory] = useState();
 
   const [showUSData, setShowUSData] = useState(true);
-  const [error, setError] = useState(null);
 
   const svgRef = useRef();
 
@@ -39,13 +38,6 @@ const Stats = () => {
       bottom: 10,
     },
   };
-
-  const colors = [
-    'var(--auto)',
-    'var(--truck)',
-    'var(--ped-bike)',
-    'var(--other)',
-  ];
 
   const sumDataByYear = (arr) => {
     let result = {
@@ -133,7 +125,7 @@ const Stats = () => {
     } else {
       setStateDataByCategory(null);
     }
-  }, [stateYrData, selectedYear]);
+  }, [stateYrData, selectedState, selectedYear]);
 
   useEffect(() => {
     if (selectedState) {
@@ -172,6 +164,13 @@ const Stats = () => {
       const vehTypes = Object.keys(usPieChartData);
       const arcData = pieGenerator(Object.values(pieChartDataset));
       const arcGenerator = arc().innerRadius(50).outerRadius(100);
+
+      const colors = [
+        'var(--auto)',
+        'var(--truck)',
+        'var(--ped-bike)',
+        'var(--other)',
+      ];
 
       const pieGroup = svg.select('.pie-group');
       pieGroup
@@ -243,7 +242,13 @@ const Stats = () => {
         }
       });
     }
-  }, [usDataByCategory, stateDataByCategory, showUSData, selectedState]);
+  }, [
+    usData,
+    usDataByCategory,
+    stateDataByCategory,
+    showUSData,
+    selectedState,
+  ]);
 
   return (
     <section className='stats-wrapper'>

@@ -1,4 +1,4 @@
-export default [
+const state_names = [
   { AK: 'Alaska' },
   { AL: 'Alabama' },
   { AR: 'Arkansas' },
@@ -51,3 +51,5 @@ export default [
   { WV: 'West Virginia' },
   { WY: 'Wyoming' },
 ];
+
+export default state_names;

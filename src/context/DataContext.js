@@ -13,7 +13,7 @@ export const DataProvider = ({ children }) => {
   const [stateTotIncData, setStateTotIncData] = useState();
   const [selectedState, setSelectedState] = useState();
   const [gxCount, setGxCount] = useState();
-  const [isSmScreen, setIsSmScreen] = useState();
+  const [screenWidth, setScreenWidth] = useState();
   const [error, setError] = useState(null);
 
   // data for all categories, for indiv years, by state + 'US'
@@ -35,20 +35,6 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       setError(error.toString());
     }
-  };
-
-  // put data for US only, for indiv years, in global state
-  const getUsData = () => {
-    const datasetUS = yrDataAll.filter((el) => el.STATE === 'US');
-    setUSData(datasetUS);
-  };
-
-  // put data for selected state only, for indiv years, in global state
-  const getStateYrData = (selectedState = 'US') => {
-    const singleStateData = yrDataAll.filter(
-      (el) => el.STATE === selectedState
-    );
-    setStateYrData(singleStateData);
   };
 
   // incidents aggregated by state for all years, for Map
@@ -84,27 +70,41 @@ export const DataProvider = ({ children }) => {
     getYrDataAll();
     getStateTotIncData();
     getGxData();
-    window.innerWidth < 1110 ? setIsSmScreen(true) : setIsSmScreen(false);
+    window.innerWidth > 1109
+      ? setScreenWidth('lg')
+      : window.innerWidth > 470
+      ? setScreenWidth('sm')
+      : setScreenWidth('xs');
     window.addEventListener('resize', () => {
-      window.innerWidth < 1110 ? setIsSmScreen(true) : setIsSmScreen(false);
+      window.innerWidth > 1109
+        ? setScreenWidth('lg')
+        : window.innerWidth > 470
+        ? setScreenWidth('sm')
+        : setScreenWidth('xs');
     });
   }, []);
 
   useEffect(() => {
     if (yrDataAll) {
-      getUsData();
+      // put data for US only, for indiv years, in global state
+      const datasetUS = yrDataAll.filter((el) => el.STATE === 'US');
+      setUSData(datasetUS);
     }
   }, [yrDataAll]);
 
   useEffect(() => {
     if (yrDataAll) {
       if (selectedState) {
-        getStateYrData(selectedState);
+        // put data for selected state only, for indiv years, in global state
+        const singleStateData = yrDataAll.filter(
+          (el) => el.STATE === selectedState
+        );
+        setStateYrData(singleStateData);
       } else {
         setStateYrData(null);
       }
     }
-  }, [selectedState]);
+  }, [selectedState, yrDataAll]);
 
   return (
     <DataContext.Provider
@@ -115,8 +115,8 @@ export const DataProvider = ({ children }) => {
         selectedState,
         gxCount,
         setSelectedState,
-        isSmScreen,
-        setIsSmScreen,
+        screenWidth,
+        setScreenWidth,
         error,
       }}
     >
