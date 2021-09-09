@@ -518,7 +518,7 @@ div.other span {
   background-color: var(--dropdown-highlight) !important;
 }
 
-.css-kojpdv-MenuList {
+.css-26l3qy-menu > div:first-child {
   max-height: 160px !important;
 }
 
@@ -537,8 +537,8 @@ div.other span {
   }
 
   .stats-wrapper {
-    height: 292.77px;
-    padding-bottom: 170px;
+    height: 242.77px;
+    padding-bottom: 120px;
   }
 
   .header-wrapper {
