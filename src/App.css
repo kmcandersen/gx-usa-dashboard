@@ -23,6 +23,7 @@
   --medium: #6d6c6c;
   --medium-light: #888;
   --light: #b8b5b5;
+  --extra-light: #e8e7e7;
   --us-color: #0d4eb1;
   --state-color: #f9aa33;
   --dropdown-primary: rgba(2, 163, 223, 1);
@@ -561,5 +562,45 @@ div.other span {
   .header-desc p:first-child {
     font-size: 16.16px;
     margin-bottom: 8px;
+  }
+}
+
+@media only screen and (max-width: 470px) {
+  .app-wrapper {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-title-logo p {
+    font-size: 44px;
+  }
+
+  .header-title {
+    margin-bottom: 10px;
+  }
+
+  .rotate-icon {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: var(--extra-light);
+  }
+
+  .rotate-icon svg {
+    fill: var(--medium);
+  }
+
+  .message-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 2s opacity;
+  }
+
+  .fade-in {
+    opacity: 1;
   }
 }

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import DataContext from './context/DataContext';
 import './App.css';
 import './stateface.css';
+import Alert from './Alert';
 import Header from './Header';
 import Map from './Map';
 import Chart from './Chart';
@@ -11,27 +12,31 @@ const App = () => {
   const { screenWidth } = useContext(DataContext);
 
   return (
-    <main className='app-wrapper'>
-      {screenWidth === 'lg' ? (
-        <>
-          <div className='col-left'>
+    <>
+      <main className='app-wrapper'>
+        {screenWidth === 'xs' ? (
+          <Alert />
+        ) : screenWidth === 'lg' ? (
+          <>
+            <div className='col-left'>
+              <Header />
+              <Chart />
+            </div>
+            <div className='col-right'>
+              <Map />
+              <Stats />
+            </div>
+          </>
+        ) : (
+          <>
             <Header />
-            <Chart />
-          </div>
-          <div className='col-right'>
             <Map />
+            <Chart />
             <Stats />
-          </div>
-        </>
-      ) : (
-        <>
-          <Header />
-          <Map />
-          <Chart />
-          <Stats />
-        </>
-      )}
-    </main>
+          </>
+        )}
+      </main>
+    </>
   );
 };
 

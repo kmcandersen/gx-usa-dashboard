@@ -70,17 +70,17 @@ export const DataProvider = ({ children }) => {
     getYrDataAll();
     getStateTotIncData();
     getGxData();
-    window.innerWidth > 1109
-      ? setScreenWidth('lg')
-      : window.innerWidth > 470
-      ? setScreenWidth('sm')
-      : setScreenWidth('xs');
-    window.addEventListener('resize', () => {
+
+    const getScreenWidth = () => {
       window.innerWidth > 1109
         ? setScreenWidth('lg')
         : window.innerWidth > 470
         ? setScreenWidth('sm')
         : setScreenWidth('xs');
+    };
+    getScreenWidth();
+    window.addEventListener('resize', () => {
+      getScreenWidth();
     });
   }, []);
 
