@@ -67,7 +67,7 @@ const Chart = () => {
           left: screenWidth !== 'lg' ? 30 : 40,
           right: 40,
           top: 0,
-          bottom: 19,
+          bottom: 22,
         },
       };
 
