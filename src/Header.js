@@ -15,7 +15,7 @@ const Header = () => {
               style={{ transform: `translateY(5px)` }}
             />
             <p className='header-title'>
-              rrgxdb<span className='header-year'> 2000-2020</span>
+              rrgxdb<span className='header-year'>2000-2020</span>
             </p>
           </div>
           <p className='header-subtitle'>railroad grade crossing dashboard</p>

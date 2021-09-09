@@ -29,11 +29,6 @@
   --dropdown-highlight: rgba(2, 163, 223, 0.25);
 }
 
-* {
-  /* border: 0.25px solid red; */
-  /* box-sizing: border-box; */
-}
-
 html,
 body {
   margin: 0;
@@ -96,19 +91,13 @@ h3 {
 .chart-wrapper {
   /* subtract Header */
   height: calc(100% - 160px);
-  /* border: 0.25px solid red; */
 }
 
 .map-wrapper {
   height: 53%;
 }
 
-.map-wrapper > * {
-  /* border: 0.25px solid red; */
-}
-
 .stats-wrapper {
-  /* border: 0.25px solid red; */
   height: 37.5%;
 }
 
@@ -201,11 +190,12 @@ h3 {
 .header-year {
   color: var(--light);
   font-size: 2.35rem;
+  padding-left: 4px;
 }
 
 .header-subtitle {
   margin: 0;
-  font-size: 1.52rem;
+  font-size: 1.49rem;
 }
 
 .header-desc a {
@@ -532,21 +522,44 @@ div.other span {
   max-height: 160px !important;
 }
 
-/* @media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1109px) {
   .app-wrapper {
-    flex-flow: column nowrap;
-    height: auto;
+    flex-direction: column;
+    height: 100vh;
+    width: 454.5px;
+    padding: 20px;
   }
 
   .header-wrapper,
   .chart-wrapper,
-  .map-wrapper,
-  .stats-wrapper {
-    width: 100%;
-  }
-
-  .chart-wrapper,
   .map-wrapper {
     height: auto;
   }
-} */
+
+  .stats-wrapper {
+    height: 292.77px;
+    padding-bottom: 170px;
+  }
+
+  .header-wrapper {
+    margin-bottom: 50px;
+    padding-top: 50px;
+  }
+
+  .map-wrapper {
+    margin-bottom: 60px;
+  }
+
+  .chart-wrapper {
+    padding-bottom: 70px;
+  }
+
+  .chart-wrapper h2 {
+    margin-top: 0;
+  }
+
+  .header-desc p:first-child {
+    font-size: 1.01rem;
+    margin-bottom: 8px;
+  }
+}

@@ -6,7 +6,7 @@ import { ReactComponent as MagPlus } from './assets/mag-plus.svg';
 import { ReactComponent as MagMinus } from './assets/mag-minus.svg';
 
 const Map = () => {
-  const { stateTotIncData } = useContext(DataContext);
+  const { stateTotIncData, isSmScreen } = useContext(DataContext);
   const [stateTotRange, setStateTotRange] = useState();
   const [isZoomed, setIsZoomed] = useState(false);
   const { selectedState, setSelectedState } = useContext(DataContext);
@@ -24,6 +24,14 @@ const Map = () => {
   let boundedDimensions = {
     height: 278.58 - 39 - mapMargins.top - mapMargins.bottom,
     width: wrapperWidth - mapMargins.left - mapMargins.right,
+  };
+
+  // positions magnifying glass icons on full/narrow screens, at full extent & zoomed
+  let iconLocation = {
+    fullOrig: { position: 'absolute', top: 83, right: 54 },
+    fullZoom: { position: 'absolute', top: 205, right: 60 },
+    smOrig: { position: 'absolute', top: 105, right: 10 },
+    smZoom: { position: 'absolute', top: 245, right: 7 },
   };
 
   const findExtent = (arr, prop) => {
@@ -57,24 +65,43 @@ const Map = () => {
       const zoomArea = svg.select('#zoom-area');
 
       if (!isZoomed) {
-        // viewBox="-56.485 -10 760.375 384.265"
-        svg.attr(
-          'viewBox',
-          `-${boundedDimensions.width * 0.13} -10 ${
-            boundedDimensions.width * 1.75
-          } ${boundedDimensions.height * 1.75}`
-        );
         zoomArea
-          .attr('x', 330)
-          .attr('y', 8)
+          .attr('x', 325)
+          .attr('y', 15)
           .attr('width', 290)
-          .attr('height', 170)
+          .attr('height', 165)
           .classed('zoomed-out', true);
+        if (!isSmScreen) {
+          // lg screen, no zoom
+          // viewBox="-56.485 -10 760.375 384.265"
+          svg.attr(
+            'viewBox',
+            `-${boundedDimensions.width * 0.13} -10 ${
+              boundedDimensions.width * 1.75
+            } ${boundedDimensions.height * 1.75}`
+          );
+        } else {
+          // sm screen, no zoom
+          // viewBox="-4.345 -10 630.025 384.265"
+          svg.attr(
+            'viewBox',
+            `-${boundedDimensions.width * 0.01} -10 ${
+              boundedDimensions.width * 1.45
+            } ${boundedDimensions.height * 1.75}`
+          );
+        }
       } else {
-        // svg same w, h dimensions as orig (454.5 x 229.67); orig/2.341 = zoom
-        // outline only shows when zoomed out
-        svg.attr('viewBox', `325 15 324.86 164.172`);
         zoomArea.classed('zoomed-out', false);
+        // lg screen, zoomed
+        if (!isSmScreen) {
+          // svg same w, h dimensions as orig (454.5 x 229.67); orig/2.341 = zoom
+          // outline only shows when zoomed out
+          svg.attr('viewBox', `325 15 324.86 164.172`);
+        } else {
+          //sm screen, zoomed
+          // w = 630.025/2.341
+          svg.attr('viewBox', `330 15 269.20 164.172`);
+        }
       }
 
       const usStates = svg
@@ -228,14 +255,14 @@ const Map = () => {
             <div
               id='zoom-control'
               className='zoom-control-plus'
-              style={{ position: 'absolute', top: 82, right: 53 }}
+              style={isSmScreen ? iconLocation.smOrig : iconLocation.fullOrig}
             >
               <MagPlus onClick={() => setIsZoomed(true)} />
             </div>
           ) : (
             <div
               id='zoom-control'
-              style={{ position: 'absolute', top: 205, right: 60 }}
+              style={isSmScreen ? iconLocation.smZoom : iconLocation.fullZoom}
             >
               <MagMinus onClick={() => setIsZoomed(false)} />
             </div>

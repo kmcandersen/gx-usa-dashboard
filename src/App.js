@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import DataContext from './context/DataContext';
 import './App.css';
 import './stateface.css';
 import Header from './Header';
@@ -7,27 +8,29 @@ import Chart from './Chart';
 import Stats from './Stats';
 
 const App = () => {
-  // if (window.innerWidth < 640) {
-  //   return (
-  //     <main className='app-wrapper'>
-  //       <Header />
-  //       <Map />
-  //       <Chart />
-  //       <Stats />
-  //     </main>
-  //   );
-  // } else {
+  const { isSmScreen } = useContext(DataContext);
 
   return (
     <main className='app-wrapper'>
-      <div className='col-left'>
-        <Header />
-        <Chart />
-      </div>
-      <div className='col-right'>
-        <Map />
-        <Stats />
-      </div>
+      {isSmScreen ? (
+        <>
+          <Header />
+          <Map />
+          <Chart />
+          <Stats />
+        </>
+      ) : (
+        <>
+          <div className='col-left'>
+            <Header />
+            <Chart />
+          </div>
+          <div className='col-right'>
+            <Map />
+            <Stats />
+          </div>
+        </>
+      )}
     </main>
   );
 };

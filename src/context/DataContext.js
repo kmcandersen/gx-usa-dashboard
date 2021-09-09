@@ -13,6 +13,7 @@ export const DataProvider = ({ children }) => {
   const [stateTotIncData, setStateTotIncData] = useState();
   const [selectedState, setSelectedState] = useState();
   const [gxCount, setGxCount] = useState();
+  const [isSmScreen, setIsSmScreen] = useState();
   const [error, setError] = useState(null);
 
   // data for all categories, for indiv years, by state + 'US'
@@ -83,6 +84,10 @@ export const DataProvider = ({ children }) => {
     getYrDataAll();
     getStateTotIncData();
     getGxData();
+    window.innerWidth < 1110 ? setIsSmScreen(true) : setIsSmScreen(false);
+    window.addEventListener('resize', () => {
+      window.innerWidth < 1110 ? setIsSmScreen(true) : setIsSmScreen(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -110,6 +115,8 @@ export const DataProvider = ({ children }) => {
         selectedState,
         gxCount,
         setSelectedState,
+        isSmScreen,
+        setIsSmScreen,
         error,
       }}
     >

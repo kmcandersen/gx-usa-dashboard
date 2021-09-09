@@ -15,7 +15,8 @@ import DataContext from './context/DataContext';
 // import './App.css';
 
 const Chart = () => {
-  const { usData, stateYrData, selectedState } = useContext(DataContext);
+  const { usData, stateYrData, selectedState, isSmScreen } =
+    useContext(DataContext);
   const [fullSelectedState, setFullSelectedState] = useState();
   const [showUSData, setShowUSData] = useState(true);
   const [isFirstStateSelected, setIsFirstStateSelected] = useState(true);
@@ -26,10 +27,10 @@ const Chart = () => {
   const topElementsHeight = 173.63;
   // initial w/h from chart-wrapper
   const svgDimensions = {
-    width: 555.5,
+    width: isSmScreen ? 460 : 555.5,
     height: 490 - topElementsHeight,
     margin: {
-      left: 40,
+      left: isSmScreen ? 30 : 40,
       right: 40,
       top: 0,
       bottom: 19,
