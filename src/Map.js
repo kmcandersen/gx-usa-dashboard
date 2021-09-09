@@ -27,10 +27,10 @@ const Map = () => {
   };
 
   // positions magnifying glass icons on full/narrow screens, at full extent & zoomed
-  let iconLocation = {
-    fullOrig: { position: 'absolute', top: 83, right: 54 },
+  let iconPosition = {
+    fullOrig: { position: 'absolute', top: 83, right: 57 },
     fullZoom: { position: 'absolute', top: 205, right: 60 },
-    smOrig: { position: 'absolute', top: 105, right: 10 },
+    smOrig: { position: 'absolute', top: 105, right: 13 },
     smZoom: { position: 'absolute', top: 245, right: 7 },
   };
 
@@ -255,14 +255,14 @@ const Map = () => {
             <div
               id='zoom-control'
               className='zoom-control-plus'
-              style={isSmScreen ? iconLocation.smOrig : iconLocation.fullOrig}
+              style={isSmScreen ? iconPosition.smOrig : iconPosition.fullOrig}
             >
               <MagPlus onClick={() => setIsZoomed(true)} />
             </div>
           ) : (
             <div
               id='zoom-control'
-              style={isSmScreen ? iconLocation.smZoom : iconLocation.fullZoom}
+              style={isSmScreen ? iconPosition.smZoom : iconPosition.fullZoom}
             >
               <MagMinus onClick={() => setIsZoomed(false)} />
             </div>
