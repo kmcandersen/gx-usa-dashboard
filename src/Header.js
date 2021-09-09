@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { ReactComponent as Logo } from './assets/gx-sign-blue.svg';
+import { ReactComponent as Logo } from './assets/gx-sign.svg';
 
 const Header = () => {
   return (
