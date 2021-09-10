@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { ReactComponent as Logo } from './assets/gx-sign.svg';
+import { ReactComponent as Octocat } from './assets/github-mark.svg';
 
 const Header = () => {
   return (
@@ -30,6 +31,16 @@ const Header = () => {
               Federal Railroad Administration
             </a>
           </p>
+          <div>
+            <a href='https://github.com/kmcandersen/gx-usa-dashboard'>
+              <Octocat
+                width={24}
+                height={24}
+                alt='GitHub link'
+                title='GitHub link'
+              />
+            </a>
+          </div>
         </div>
       </div>
     </header>

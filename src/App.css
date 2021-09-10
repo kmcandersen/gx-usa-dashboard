@@ -209,8 +209,8 @@ h3 {
   margin-top: 7px;
   margin-bottom: 4px;
 }
-.header-desc p:last-child {
-  margin-top: 0;
+.header-desc p:nth-child(2) {
+  margin: 0 0 6px 0;
 }
 
 /* MAP */
@@ -543,7 +543,7 @@ div.other span {
   }
 
   .header-wrapper {
-    margin-bottom: 50px;
+    margin-bottom: 60px;
     padding-top: 50px;
   }
 
