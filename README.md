@@ -1,6 +1,6 @@
 # rrgxdb
 
-- An interactive dashboard showing US railroad-grade crossing collision data, 2000-2020
+- Railroad Grade Crossing Dashboard
 - Starring: React, D3 & Federal Railroad Administration Highway-Rail Accident Data
 
 This interactive dashboard lets users explore FRA collision data for US highway-rail grade crossings (where a road crosses a railroad at grade level). Users can view nationwide data for 2000-2020, or focus on specific states and years. Only collisions that occurred on main track are included in the dataset.
