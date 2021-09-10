@@ -17,5 +17,5 @@ Federal Railroad Administration Office of Safety Analysis
 ## Screenshot
 
 <p float="left">
-<img src="https://kristenandersen.online/assets/screenshots/rrgxdb-800.png" alt="Dashboard preview" height="70%" width="70%"/>
+<img src="https://kristenandersen.online/assets/screenshots/rrgxdb-800.jpg" alt="Dashboard preview" height="70%" width="70%"/>
 </p>
