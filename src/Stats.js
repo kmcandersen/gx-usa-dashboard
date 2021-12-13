@@ -13,31 +13,19 @@ const Stats = () => {
   // single year OR total for US/state
   const [usDataByCategory, setUsDataByCategory] = useState();
   const [stateDataByCategory, setStateDataByCategory] = useState();
-
-  const [showUSData, setShowUSData] = useState(true);
-
-  const svgRef = useRef();
-
-  // statsTitle 44.72 + statsRange 19
-  const topElementsHeight = 63.72;
-  const subSectionWidths = {
+  const [subSectionWidths] = useState({
     dropdown: '35%',
     statsText: '30%',
     pieChart: '46%',
     pieChartDec: 0.46,
     pieLegend: '24%',
-  };
-  const svgDimensions = {
-    // initial w/h from stats-wrapper
-    width: 454.5 * subSectionWidths.pieChartDec,
-    height: 227.5 - topElementsHeight,
-    margin: {
-      left: 10,
-      right: 10,
-      top: 10,
-      bottom: 10,
-    },
-  };
+  });
+  // so can be accessed in JSX
+  const [svgDimensionsHeight, setSvgDimensionsHeight] = useState();
+
+  const [showUSData, setShowUSData] = useState(true);
+
+  const svgRef = useRef();
 
   const sumDataByYear = (arr) => {
     let result = {
@@ -70,32 +58,6 @@ const Stats = () => {
     return result;
   };
 
-  const getSelectedData = (state, year = 'total') => {
-    if (state === 'US') {
-      if (year === 'total') {
-        setUsDataByCategory(sumDataByYear(usData));
-      } else {
-        let result = usData.find((el) => el.YEAR === year);
-        let resultCalc = {
-          ...result,
-          TOTCAS: result.TOTKLD + result.TOTINJ,
-        };
-        setUsDataByCategory(resultCalc);
-      }
-    } else if (state !== 'US') {
-      if (year === 'total') {
-        setStateDataByCategory(sumDataByYear(stateYrData));
-      } else {
-        let result = stateYrData.find((el) => el.YEAR === year);
-        let resultCalc = {
-          ...result,
-          TOTCAS: result.TOTKLD + result.TOTINJ,
-        };
-        setStateDataByCategory(resultCalc);
-      }
-    }
-  };
-
   const getPieChartData = (obj) => {
     return {
       Auto: obj.VEHAUTO / obj.TOTINC,
@@ -106,6 +68,31 @@ const Stats = () => {
   };
 
   useEffect(() => {
+    const getSelectedData = (state, year = 'total') => {
+      if (state === 'US') {
+        if (year === 'total') {
+          setUsDataByCategory(sumDataByYear(usData));
+        } else {
+          let result = usData.find((el) => el.YEAR === year);
+          let resultCalc = {
+            ...result,
+            TOTCAS: result.TOTKLD + result.TOTINJ,
+          };
+          setUsDataByCategory(resultCalc);
+        }
+      } else if (state !== 'US') {
+        if (year === 'total') {
+          setStateDataByCategory(sumDataByYear(stateYrData));
+        } else {
+          let result = stateYrData.find((el) => el.YEAR === year);
+          let resultCalc = {
+            ...result,
+            TOTCAS: result.TOTKLD + result.TOTINJ,
+          };
+          setStateDataByCategory(resultCalc);
+        }
+      }
+    };
     if (usData) {
       if (selectedYear !== 'total') {
         getSelectedData('US', selectedYear);
@@ -113,9 +100,6 @@ const Stats = () => {
         setUsDataByCategory(sumDataByYear(usData));
       }
     }
-  }, [usData, selectedYear]);
-
-  useEffect(() => {
     if (stateYrData) {
       if (selectedYear !== 'total') {
         getSelectedData(selectedState, selectedYear);
@@ -125,7 +109,7 @@ const Stats = () => {
     } else {
       setStateDataByCategory(null);
     }
-  }, [stateYrData, selectedState, selectedYear]);
+  }, [usData, stateYrData, selectedState, selectedYear]);
 
   useEffect(() => {
     if (selectedState) {
@@ -144,6 +128,24 @@ const Stats = () => {
   }, [selectedState]);
 
   useEffect(() => {
+    // statsTitle 44.72 + statsRange 19
+    const topElementsHeight = 63.72;
+    const svgDimensions = {
+      // initial w/h from stats-wrapper
+      width: 454.5 * subSectionWidths.pieChartDec,
+      height: 227.5 - topElementsHeight,
+      margin: {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      },
+    };
+    // so height can be accessed in JSX wo relocating entire object + topElementsHeight
+    if (svgDimensions.height) {
+      setSvgDimensionsHeight(svgDimensions.height);
+    }
+
     const svg = select(svgRef.current);
     svg
       .attr('viewBox', `0 0 200 200`)
@@ -248,6 +250,7 @@ const Stats = () => {
     stateDataByCategory,
     showUSData,
     selectedState,
+    subSectionWidths,
   ]);
 
   return (
@@ -294,7 +297,7 @@ const Stats = () => {
       <div
         className='stats-content'
         style={{
-          height: svgDimensions.height,
+          height: svgDimensionsHeight,
         }}
       >
         <div
